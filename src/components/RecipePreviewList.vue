@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <h3>
-      {{ title }}:
+      {{ title }}
       <slot></slot>
     </h3>
     <b-row>
@@ -41,7 +41,7 @@ export default {
         //   this.$root.store.server_domain + "/recipes/random",
         // );
 
-        const amountToFetch = 5; // Set this to how many recipes you want to fetch
+        const amountToFetch = 3; // Set this to how many recipes you want to fetch
         const response = mockGetRecipesPreview(amountToFetch);
 
 
@@ -58,8 +58,44 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .container {
   min-height: 400px;
 }
+</style> -->
+<style scoped>
+.recipe-preview-list {
+  margin: 20px 0;
+}
+.recipe-preview {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.recipe-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+.recipe-title {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+.recipe-details {
+  color: #666;
+}
+h3 {
+  color: #42b983; /* Pastel green */
+  align-self: center;
+  text-align: center; /* Center text horizontally */
+  margin: 0; /* Remove default margin */
+  
+  /* Flexbox adjustments */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensures it takes up full height of its container */
+}
+
 </style>
+

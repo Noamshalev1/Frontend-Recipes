@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      image_load: false
+      image_load: true
     };
   },
   props: {
@@ -78,64 +78,62 @@ export default {
 }
 
 .recipe-preview .recipe-body .recipe-image {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
   display: block;
-  width: 98%;
+  margin: auto;
+  width: 60%; /* Adjust the width as needed */
   height: auto;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
+  object-fit: cover; /* Ensures the image covers the entire container */
 }
 
+
+/* Recipe Footer Styling */
 .recipe-preview .recipe-footer {
   width: 100%;
-  height: 50%;
+  height: auto;
   overflow: hidden;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .recipe-preview .recipe-footer .recipe-title {
-  padding: 10px 10px;
-  width: 100%;
-  font-size: 12pt;
-  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
   white-space: nowrap;
   overflow: hidden;
-  -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
 }
 
 .recipe-preview .recipe-footer ul.recipe-overview {
-  padding: 5px 10px;
-  width: 100%;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1 auto;
-  -ms-flex: 1 auto;
-  flex: 1 auto;
-  table-layout: fixed;
-  margin-bottom: 0px;
+  justify-content: space-between;
 }
 
 .recipe-preview .recipe-footer ul.recipe-overview li {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  width: 90px;
-  display: table-cell;
+  flex: 1;
   text-align: center;
+  font-size: 14px;
+  color: #666;
 }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .recipe-preview .recipe-footer {
+    padding: 5px;
+  }
+  
+  .recipe-preview .recipe-footer .recipe-title {
+    font-size: 14px;
+  }
+  
+  .recipe-preview .recipe-footer ul.recipe-overview li {
+    font-size: 12px;
+  }
+}
+
 </style>
