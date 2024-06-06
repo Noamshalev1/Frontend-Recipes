@@ -14,6 +14,9 @@
         <li>{{ recipe.readyInMinutes }} minutes</li>
         <li>{{ recipe.aggregateLikes }} likes</li>
       </ul>
+      <span v-if="recipe.vegetarian"><img src="../assets/vegeterian.jpg" class="vegi"/></span>
+      <span v-if="recipe.vegan"><img src="../assets/vegan.png" class="vegan"/></span>
+      <span v-if="recipe.glutenFree"><img src="../assets/glutenfree.jpg" class="glutenfree"/></span>
     </div>
   </router-link>
 </template>
@@ -134,6 +137,18 @@ export default {
   .recipe-preview .recipe-footer ul.recipe-overview li {
     font-size: 12px;
   }
+}
+.vegi {
+  width: 20px; 
+  height: auto; 
+  margin: 5px;  
+}
+
+.vegan,
+.glutenfree{
+  width: 40px; 
+  height: auto;
+  margin: 5px
 }
 
 </style>

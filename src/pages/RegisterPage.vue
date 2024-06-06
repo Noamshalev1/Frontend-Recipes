@@ -23,6 +23,9 @@
         <b-form-invalid-feedback v-if="!$v.form.username.alpha">
           Username alpha
         </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.username.success">
+          Username is already taken
+        </b-form-invalid-feedback>
       </b-form-group>
 
       <b-form-group
@@ -196,6 +199,7 @@ import {
   email
 } from "vuelidate/lib/validators";
 import { mockRegister } from "../services/auth.js";
+import users from "../assets/mocks/users.json";
 export default {
   name: "Register",
   data() {
@@ -208,7 +212,8 @@ export default {
         password: "",
         confirmedPassword: "",
         email: "",
-        submitError: undefined
+        submitError: undefined,
+        success: true
       },
       countries: [{ value: null, text: "", disabled: true }],
       errors: [],
@@ -220,7 +225,8 @@ export default {
       username: {
         required,
         length: (u) => minLength(3)(u) && maxLength(8)(u),
-        alpha
+        alpha,
+        success: (u)=> !users.users.includes(u)
       },
       firstName: {
         required,
@@ -271,18 +277,18 @@ export default {
         //     password: this.form.password
         //   }
         // );
-
         const userDetails = {
           username: this.form.username,
           password: this.form.password
         };
 
-        const response = mockRegister(userDetails);
+        const response = mockRegister(userDetails, !users.users.includes(this.form.username));
+        this.addUser();
 
         this.$router.push("/login");
-        // console.log(response);
       } catch (err) {
         console.log(err.response);
+        alert(err.response)
         this.form.submitError = err.response.data.message;
       }
     },
@@ -309,6 +315,9 @@ export default {
       this.$nextTick(() => {
         this.$v.$reset();
       });
+    },
+    addUser() {
+      users.users.push(this.form.username);
     }
   }
 };
