@@ -3,17 +3,29 @@
     <h1 class="title">Search Page</h1>
     <div>
       <b-input-group class="mt-3">
+        <b-input-group-prepend is-text>
+          <b-icon icon="search"></b-icon>
+        </b-input-group-prepend>
         <b-form-input v-model="searchQuery" placeholder="type to search for recipie" @keyup.enter="performSearch"></b-form-input>
-        <b-input-group-append>
+        <!-- <b-input-group-append>
           <b-button variant="info" @click="performSearch">Search</b-button>
-        </b-input-group-append>
+        </b-input-group-append> -->
+        <template #append>
+          <b-dropdown :text="`Number of Recipes: ${resultsCount}`" variant="info">
+            <b-dropdown-item @click="updateResultsCount(5)" :active="resultsCount === 5">5</b-dropdown-item>
+            <b-dropdown-item @click="updateResultsCount(10)" :active="resultsCount === 10">10</b-dropdown-item>
+            <b-dropdown-item @click="updateResultsCount(15)" :active="resultsCount === 15">15</b-dropdown-item>
+          </b-dropdown>
+        </template>
       </b-input-group>
     </div>
     <div v-if="searchQuery.length === 0">
       <!-- Show nothing if there's no query -->
     </div>
-    <div class="recipes" v-else-if="filteredRecipes.length">
-      <RecipePreview v-for="recipe in filteredRecipes" :key="recipe.id" :recipe="recipe" />
+    <div class="row" v-else-if="filteredRecipes.length">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4" v-for="recipe in limitedFilteredRecipes" :key="recipe.id">
+        <RecipePreview :recipe="recipe" />
+      </div>
     </div>
     <div v-else>
       <p>No recipes found. Please enter a search query.</p>
@@ -33,8 +45,14 @@ export default {
     return {
       searchQuery: "",
       recipes: [],
-      filteredRecipes: []
+      filteredRecipes: [],
+      resultsCount: 5,
     };
+  },
+  computed: {
+    limitedFilteredRecipes() {
+      return this.filteredRecipes.slice(0, this.resultsCount);
+    }
   },
   created() {
     this.recipes = recipes;
@@ -71,7 +89,11 @@ export default {
         this.searchQuery = lastSearch;
         this.performSearch();
       }
-    }
+    },
+    updateResultsCount(count) {
+      this.resultsCount = count;
+      this.performSearch(); // Refresh search results with new count
+    },
   }
 };
 </script>
