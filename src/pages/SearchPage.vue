@@ -32,6 +32,7 @@ export default {
   },
   created() {
     this.recipes = recipes;
+    this.loadLastSearch();
   },
   methods: {
     performSearch() {
@@ -39,10 +40,24 @@ export default {
       if (query) {
         this.filteredRecipes = this.recipes.filter(recipe =>
           recipe.title.toLowerCase().includes(query) ||
-          recipe.summary.toLowerCase().includes(query)
+          recipe.summary.toLowerCase().includes(query)||
+          (query === "vegan" && recipe.vegan) ||
+          (query === "vegetarian" && recipe.vegetarian) ||
+          (query === "gluten free" && recipe.glutenFree)
         );
+        this.saveLastSearch(query);
       } else {
         this.filteredRecipes = [];
+      }
+    },
+    saveLastSearch(query) {
+      localStorage.setItem('lastSearch', query);
+    },
+    loadLastSearch() {
+      const lastSearch = localStorage.getItem('lastSearch');
+      if (lastSearch) {
+        this.searchQuery = lastSearch;
+        this.performSearch();
       }
     }
   }
