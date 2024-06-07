@@ -74,7 +74,7 @@ export default {
   position: relative;
   margin: 10px 10px;
 }
-.recipe-preview > .recipe-body {
+.recipe-preview, .recipe-body {
   width: 100%;
   height: 200px;
   position: relative;
