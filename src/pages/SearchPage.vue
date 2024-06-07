@@ -7,11 +7,11 @@
           <b-icon icon="search"></b-icon>
         </b-input-group-prepend>
         <b-form-input v-model="searchQuery" placeholder="type to search for recipie" @keyup.enter="performSearch"></b-form-input>
-        <!-- <b-input-group-append>
+        <b-input-group-append>
           <b-button variant="info" @click="performSearch">Search</b-button>
-        </b-input-group-append> -->
+        </b-input-group-append>
         <template #append>
-          <b-dropdown :text="`Number of Recipes: ${resultsCount}`" variant="info">
+          <b-dropdown :text="`Number of Recipes: ${resultsCount}`" variant="secondary">
             <b-dropdown-item @click="updateResultsCount(5)" :active="resultsCount === 5">5</b-dropdown-item>
             <b-dropdown-item @click="updateResultsCount(10)" :active="resultsCount === 10">10</b-dropdown-item>
             <b-dropdown-item @click="updateResultsCount(15)" :active="resultsCount === 15">15</b-dropdown-item>
