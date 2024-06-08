@@ -12,11 +12,47 @@
         </b-input-group-append>
         <template #append>
           <b-dropdown :text="`Number of Recipes: ${resultsCount}`" variant="secondary">
-            <b-dropdown-item @click="updateResultsCount(5)" :active="resultsCount === 5">5</b-dropdown-item>
-            <b-dropdown-item @click="updateResultsCount(10)" :active="resultsCount === 10">10</b-dropdown-item>
-            <b-dropdown-item @click="updateResultsCount(15)" :active="resultsCount === 15">15</b-dropdown-item>
+            <b-dropdown-group header="Choose option" class="small">
+            <b-dropdown-item-button @click="updateResultsCount(5)">
+              <b-icon :icon="resultsCount === 5 ? 'check' : 'blank'" aria-hidden="true"></b-icon>
+              5 <span class="sr-only"></span>
+            </b-dropdown-item-button>
+            <b-dropdown-item-button @click="updateResultsCount(10)">
+              <b-icon :icon="resultsCount === 10 ? 'check' : 'blank'" aria-hidden="true" ></b-icon>
+              10 <span class="sr-only"></span>
+            </b-dropdown-item-button>
+            <b-dropdown-item-button @click="updateResultsCount(15)">
+              <b-icon :icon="resultsCount === 15 ? 'check' : 'blank'" if  aria-hidden="true"></b-icon>
+              15 <span class="sr-only"></span>
+            </b-dropdown-item-button>
+          </b-dropdown-group>
           </b-dropdown>
         </template>
+      </b-input-group>
+      <b-input-group class="mt-3">
+        <b-dropdown :text="selectedCuisine ? selectedCuisine : 'Select Cuisine'" variant="secondary">
+          <b-dropdown-item v-for="cuisine in cuisines" :key="cuisine" @click="selectedCuisine = cuisine">{{ cuisine }}</b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown :text="selectedDiet ? selectedDiet : 'Select Diet'" variant="secondary">
+          <b-dropdown-item v-for="diet in diets" :key="diet" @click="selectedDiet = diet">{{ diet }}</b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown :text="`Selected Intolerances (${selectedIntolerances.length})`" variant="secondary">
+          <b-dropdown-item v-for="intolerance in intolerances" :key="intolerance" @click="toggleIntolerance(intolerance)">
+            <b-form-checkbox :checked="selectedIntolerances.includes(intolerance)">
+              {{ intolerance }}
+            </b-form-checkbox>
+          </b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown text="Sort By">
+          <b-dropdown-item-button @click="changeSort('popularity')">
+            <b-icon :icon="sortOption === 'popularity' ? 'check' : 'blank'" aria-hidden="true"></b-icon>
+            Popularity
+          </b-dropdown-item-button>
+          <b-dropdown-item-button @click="changeSort('prepTime')">
+            <b-icon :icon="sortOption === 'prepTime' ? 'check' : 'blank'" aria-hidden="true"></b-icon>
+            Preparation Time
+          </b-dropdown-item-button>
+        </b-dropdown>
       </b-input-group>
     </div>
     <div v-if="searchQuery.length === 0">
@@ -47,6 +83,14 @@ export default {
       recipes: [],
       filteredRecipes: [],
       resultsCount: 5,
+      cuisines: [],
+      selectedCuisine: null,
+      diets: [],
+      selectedDiet: null,
+      intolerances: [],
+      selectedIntolerances: [],
+      sortOption: 'popularity', // Default sort option
+      sortDirection: 'desc' // Default sort direction
     };
   },
   computed: {
@@ -57,8 +101,57 @@ export default {
   created() {
     this.recipes = recipes;
     this.loadLastSearch();
+    this.fetchCuisines();
+    this.fetchDiets();
+    this.fetchIntolerances();
     },
   methods: {
+    changeSort(option) {
+    if (this.sortOption === option) {
+    } else {
+      this.sortOption = option;
+    }
+    this.performSearch(); // Re-run the search with the new sort settings
+    },
+    fetchCuisines() {
+      fetch('https://api.spoonacular.com/recipes/cuisine', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': 'b1a72f1616ff413e984ea8dc1377d964'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.cuisines = data.cuisines;
+        });
+    },
+    fetchDiets() { //NEED TO GO OVER THIS !!! <------------------------------------------------------------------------------
+      fetch('https://api.spoonacular.com/recipes/diet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': 'b1a72f1616ff413e984ea8dc1377d964'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.diets = data.diets;
+        });
+    },
+    fetchIntolerances() { //NEED TO GO OVER THIS !!! <------------------------------------------------------------------------------
+      fetch('https://api.spoonacular.com/recipes/intolerances', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': 'b1a72f1616ff413e984ea8dc1377d964'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.intolerances = data.intolerances;
+        });
+    },
     performSearch() {
       this.searchQuery = this.searchQuery.toLowerCase();
       if (this.searchQuery) {
@@ -75,6 +168,25 @@ export default {
             
           }
         });
+        if (this.selectedCuisine) {
+          filtered = filtered.filter(recipe => recipe.cuisine === this.selectedCuisine);
+        }
+        if (this.selectedDiet) {
+          filtered = filtered.filter(recipe => recipe.diet === this.selectedDiet);
+        }
+        if (this.selectedIntolerances.length) {
+          filtered = filtered.filter(recipe =>
+            this.selectedIntolerances.every(intolerance => recipe.intolerances.includes(intolerance))
+          );
+        }
+        this.filteredRecipes.sort((a, b) => {
+        if (this.sortOption === 'popularity') {
+          return this.sortDirection === 'asc' ? a.aggregateLikes - b.aggregateLikes : b.aggregateLikes - a.aggregateLikes;
+        } else if (this.sortOption === 'prepTime') {
+          return this.sortDirection === 'asc' ? a.readyInMinutes - b.readyInMinutes : b.readyInMinutes - a.readyInMinutes;
+        }
+        return 0;
+  });
         this.saveLastSearch(this.searchQuery);
       } else {
         this.filteredRecipes = [];
@@ -93,6 +205,15 @@ export default {
     updateResultsCount(count) {
       this.resultsCount = count;
       this.performSearch(); // Refresh search results with new count
+    },
+    toggleIntolerance(intolerance) {
+      const index = this.selectedIntolerances.indexOf(intolerance);
+      if (index > -1) {
+        this.selectedIntolerances.splice(index, 1);
+      } else {
+        this.selectedIntolerances.push(intolerance);
+      }
+      this.performSearch();
     },
   }
 };
