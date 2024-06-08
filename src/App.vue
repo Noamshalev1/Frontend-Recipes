@@ -11,7 +11,7 @@
         <router-link class="highlight-button" :to="{ name: 'login' }">Login</router-link>
       </span>
       <span v-else>
-        <b-button @click="showRecipeModal = true">Add New Recipe</b-button>
+        <b-button @click="toggleModal">Add New Recipe</b-button>
           <new-recipe-page :show-modal="showRecipeModal" @hide="handleHide"></new-recipe-page>
         <b-dropdown id="dropdown-left" text="Personal Info" variant="primary" class="m-2">
         <b-dropdown-item href="#"><router-link :to="{ name: 'favorites' }">Favorites</router-link></b-dropdown-item>
@@ -41,8 +41,14 @@ export default {
   },
   methods: {
     handleHide() {
-      this.showRecipeModal = false;
+      this.$nextTick(() => {
+    this.showRecipeModal = false;
+  });
     },
+    toggleModal() {
+    this.showRecipeModal = !this.showRecipeModal;
+    console.log('Toggle modal to:', this.showRecipeModal);
+  },
     Logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");

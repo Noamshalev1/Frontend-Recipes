@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="showModal" title="Create New Recipe" @hide="onHide">
+  <b-modal v-model="showModal" title="Create New Recipe" @hide="onModalClose">
       <b-form-group label="Recipe Name:">
         <b-form-input v-model="recipe.name" required></b-form-input>
       </b-form-group>
@@ -21,12 +21,8 @@
 
 <script>
 export default {
-  props: {
-    showModal: {
-      type: Boolean,
-      required: true
-    }
-  },
+  props: 
+    ['showModal'],
   data() {
     return {
       recipe: {
@@ -41,8 +37,10 @@ export default {
   methods: {
     createRecipe() {
       // Here, implement the logic to create a recipe
-      console.log(this.recipe);
       this.$emit('hide'); // Notify the parent to hide the modal
+    },
+    onModalClose() {
+      this.$emit('hide'); // Make sure this emits after the modal is set to close
     }
   }
 };
