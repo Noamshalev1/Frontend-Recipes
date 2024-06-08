@@ -11,7 +11,8 @@
         <router-link class="highlight-button" :to="{ name: 'login' }">Login</router-link>
       </span>
       <span v-else>
-        <router-link :to="{ name: 'newRecipe' }">Add new Recipe</router-link>|
+        <b-button @click="showRecipeModal = true">Add New Recipe</b-button>
+          <new-recipe-page :show-modal="showRecipeModal" @hide="handleHide"></new-recipe-page>
         <b-dropdown id="dropdown-left" text="Personal Info" variant="primary" class="m-2">
         <b-dropdown-item href="#"><router-link :to="{ name: 'favorites' }">Favorites</router-link></b-dropdown-item>
         <b-dropdown-item href="#"><router-link :to="{ name: 'myrecipes' }">My Recipes</router-link></b-dropdown-item>
@@ -26,9 +27,22 @@
 </template>
 
 <script>
+import NewRecipePage from './pages/NewRecipePage.vue';
+
 export default {
   name: "App",
+  components: {
+    NewRecipePage
+  },
+  data() {
+    return {
+      showRecipeModal: false
+    };
+  },
   methods: {
+    handleHide() {
+      this.showRecipeModal = false;
+    },
     Logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
