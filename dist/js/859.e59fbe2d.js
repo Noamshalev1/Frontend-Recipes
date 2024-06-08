@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkassignment_2_1"]=self["webpackChunkassignment_2_1"]||[]).push([[859],{1859:(s,t,e)=>{e.r(t),e.d(t,{default:()=>u});var n=function(){var s=this;s._self._c;return s._m(0)},a=[function(){var s=this,t=s._self._c;return t("div",{staticClass:"container"},[t("h1",{staticClass:"title"},[s._v("New Recipe Page")])])}],l=e(1001),i={},c=(0,l.Z)(i,n,a,!1,null,null,null);const u=c.exports}}]);
+//# sourceMappingURL=859.e59fbe2d.js.map

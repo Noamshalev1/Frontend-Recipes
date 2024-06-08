@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkassignment_2_1"]=self["webpackChunkassignment_2_1"]||[]).push([[342],{5342:(n,s,e)=>{e.r(s),e.d(s,{default:()=>i});var t=function(){var n=this,s=n._self._c;return s("Login")},l=[],u=e(5554);const a={components:{Login:u.Z}},c=a;var o=e(1001),r=(0,o.Z)(c,t,l,!1,null,null,null);const i=r.exports}}]);
+//# sourceMappingURL=342.0055a1ec.js.map
