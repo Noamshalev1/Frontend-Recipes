@@ -55,16 +55,18 @@
         </b-dropdown>
       </b-input-group>
     </div>
+    <div class="recipes">
     <div v-if="searchQuery.length === 0">
-      <!-- Show nothing if there's no query -->
-    </div>
-    <div class="row" v-else-if="filteredRecipes.length">
-      <div class="col-lg-4 col-md-6 col-sm-12 mb-4" v-for="recipe in limitedFilteredRecipes" :key="recipe.id">
-        <RecipePreview :recipe="recipe" />
-      </div>
-    </div>
-    <div v-else>
-      <p>No recipes found. Please enter a search query.</p>
+          <!-- Show nothing if there's no query -->
+        </div>
+        <div class="row" v-else-if="filteredRecipes.length">
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4" v-for="recipe in limitedFilteredRecipes" :key="recipe.id">
+            <RecipePreview :recipe="recipe" />
+          </div>
+        </div>
+        <div v-else>
+          <p>No recipes found. Please enter a search query.</p>
+        </div>
     </div>
   </div>
 </template>
@@ -220,11 +222,9 @@ export default {
 </script>
 
 <style scoped>
-.recipes {
-  margin-top: 20px;
-  display: flex;
-}
-.recipe-column {
+
+.mt-3 {
   margin-bottom: 20px;
 }
+
 </style>
