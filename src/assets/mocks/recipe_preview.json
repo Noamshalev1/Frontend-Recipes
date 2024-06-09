@@ -8,6 +8,7 @@
       "vegetarian": false,
       "vegan": false,
       "glutenFree": false,
+      "favorite": false,
       "summary": "You can never have too many main course recipes, so give Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs a try. One serving contains <b>543 calories</b>, <b>17g of protein</b>, and <b>16g of fat</b>. For <b>$1.57 per serving</b>, this recipe <b>covers 22%</b> of your daily requirements of vitamins and minerals. This recipe serves 2. A mixture of butter, white wine, pasta, and a handful of other ingredients are all it takes to make this recipe so yummy. 209 people have tried and liked this recipe. It is brought to you by fullbellysisters.blogspot.com. From preparation to the plate, this recipe takes approximately <b>45 minutes</b>. Taking all factors into account, this recipe <b>earns a spoonacular score of 83%</b>, which is tremendous. If you like this recipe, take a look at these similar recipes: <a href=\"https://spoonacular.com/recipes/pasta-with-garlic-scallions-cauliflower-breadcrumbs-1230187\">Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs</a>, <a href=\"https://spoonacular.com/recipes/pasta-with-garlic-scallions-cauliflower-breadcrumbs-1229807\">Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs</a>, and <a href=\"https://spoonacular.com/recipes/pasta-with-garlic-scallions-cauliflower-breadcrumbs-1229669\">Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs</a>."
     },
     {
@@ -19,6 +20,7 @@
       "vegetarian": true,
       "vegan": true,
       "glutenFree": false,
+      "favorite": false,
       "summary": "This recipe is a delightful vegetarian option. Each serving contains <b>400 calories</b>, <b>15g of protein</b>, and <b>20g of fat</b>. It costs <b>$2.00 per serving</b> and takes approximately <b>30 minutes</b> to prepare. It's brought to you by deliciousrecipes.com. If you like this recipe, check out these similar recipes: <a href=\"https://spoonacular.com/recipes/crispy-fried-tofu-sandwich-1230188\">Crispy Fried Tofu Sandwich</a>, <a href=\"https://spoonacular.com/recipes/tofu-sandwich-with-avocado-slaw-1229808\">Tofu Sandwich with Avocado & Slaw</a>."
     },
     {
@@ -30,6 +32,7 @@
       "vegetarian": false,
       "vegan": false,
       "glutenFree": false,
+      "favorite": false,
       "summary": "Lemon Garlic Shrimp Pasta is a quick and easy dish perfect for a weeknight dinner. It has <b>350 calories</b>, <b>20g of protein</b>, and <b>12g of fat</b> per serving. The cost is <b>$3.00 per serving</b>. This recipe takes about <b>25 minutes</b> to prepare and has a spoonacular score of <b>90%</b>. More similar recipes: <a href=\"https://spoonacular.com/recipes/lemon-garlic-shrimp-pasta-1230189\">Lemon Garlic Shrimp Pasta</a>, <a href=\"https://spoonacular.com/recipes/garlic-shrimp-pasta-1229809\">Garlic Shrimp Pasta</a>."
     },
     {
@@ -41,6 +44,7 @@
       "vegetarian": true,
       "vegan": false,
       "glutenFree": true,
+      "favorite": false,
       "summary": "A healthy and refreshing salad perfect for lunch or dinner. It contains <b>250 calories</b>, <b>8g of protein</b>, and <b>15g of fat</b> per serving. The cost per serving is <b>$2.50</b>. It takes about <b>20 minutes</b> to prepare. Similar recipes: <a href=\"https://spoonacular.com/recipes/quinoa-salad-with-avocado-and-feta-1230190\">Quinoa Salad with Avocado and Feta</a>, <a href=\"https://spoonacular.com/recipes/avocado-quinoa-salad-1229810\">Avocado Quinoa Salad</a>."
     },
     {
@@ -52,6 +56,7 @@
       "vegetarian": true,
       "vegan": true,
       "glutenFree": false,
+      "favorite": false,
       "summary": "This Spicy Black Bean Burger is perfect for a hearty and flavorful meal. Each serving contains <b>320 calories</b>, <b>12g of protein</b>, and <b>10g of fat</b>. It costs <b>$1.80 per serving</b>. Preparation takes about <b>40 minutes</b>. Similar recipes: <a href=\"https://spoonacular.com/recipes/spicy-black-bean-burger-1230191\">Spicy Black Bean Burger</a>, <a href=\"https://spoonacular.com/recipes/black-bean-burger-1229811\">Black Bean Burger</a>."
     },
     {
@@ -63,6 +68,7 @@
       "vegetarian": true,
       "vegan": true,
       "glutenFree": true,
+      "favorite": false,
       "summary": "A flavorful and spicy curry that is both vegan and gluten-free. Each serving has <b>300 calories</b>, <b>10g of protein</b>, and <b>12g of fat</b>. It costs <b>$2.20 per serving</b> and takes about <b>35 minutes</b> to prepare. Similar recipes: <a href=\"https://spoonacular.com/recipes/thai-green-curry-with-vegetables-1230192\">Thai Green Curry with Vegetables</a>, <a href=\"https://spoonacular.com/recipes/green-curry-vegetables-1229812\">Green Curry Vegetables</a>."
     }
   ]

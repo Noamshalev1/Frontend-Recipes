@@ -1,4 +1,5 @@
 <template>
+  <div>
   <router-link
     :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
     class="recipe-preview"
@@ -19,6 +20,22 @@
       <span v-if="recipe.glutenFree"><img src="../assets/glutenfree.png" class="glutenfree"/></span>
     </div>
   </router-link>
+  <div class="btn-group-toggle">
+        <label class="btn btn-secondary active" style="background-color: white;">
+          <input
+            type="checkbox"
+            v-model="isFavorite"
+            @change="toggleFavorite"
+          >
+          <img
+            :src="isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png')"
+            alt="Favorite"
+            class="favorite-icon"
+            style="width: 20px; height: 20px;"
+          >
+        </label>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -30,8 +47,46 @@ export default {
   },
   data() {
     return {
-      image_load: true
+      image_load: true,
+      isFavorite: this.getFavoriteState(this.recipe)
     };
+  },
+  computed: {
+    favoriteImage() {
+      return this.isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png');
+    }
+  },
+  methods: {
+    toggleFavorite() {
+      this.isFavorite = !this.isFavorite;
+      if (this.isFavorite) {
+        this.addToFavorites();
+      } else {
+        this.removeFromFavorites();
+      }
+    },
+    addToFavorites() {
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      if (!favorites.some(r => r.id === this.recipe.id)) {
+        favorites.push(this.recipe);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+      }
+    },
+    removeFromFavorites() {
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      let index = favorites.findIndex(r => r.id === this.recipe.id);
+      if (index !== -1) {
+        favorites.splice(index, 1);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+      }
+    },
+    loadImage() {
+      this.image_load = true;
+    },
+    getFavoriteState(recipe) {
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      return favorites.some(r => r.id === recipe.id);
+    }
   },
   props: {
     recipe: {
@@ -88,6 +143,13 @@ export default {
   object-fit: cover; /* Ensures the image covers the entire container */
 }
 
+/* .btn-group-toggle .btn {
+  padding: 5px;
+}
+
+.btn-group-toggle img {
+  margin-right: 5px;
+} */
 
 /* Recipe Footer Styling */
 .recipe-preview .recipe-footer {
