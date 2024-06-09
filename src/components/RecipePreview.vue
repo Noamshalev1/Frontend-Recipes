@@ -4,7 +4,7 @@
       :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
       class="card-img-link"
     >
-      <img v-if="image_load" :src="recipe.image" class="card-img-top recipe-image" />
+      <img v-if="image_load" :src="recipe.image" class="card-img-top recipe-image" @click="markAsViewed()" />
     </router-link>
     <div class="card-body">
       <h5 class="card-title" :title="recipe.title">{{ recipe.title }}</h5>
@@ -13,6 +13,7 @@
         <li>{{ recipe.aggregateLikes }} likes</li>
       </ul>
       <div class="card-icons">
+        <b-icon v-if="isViewed" icon="eye" class="viewed-icon"></b-icon>
         <span v-if="recipe.vegetarian"><img src="../assets/vegiterian.png" class="vegi" /></span>
         <span v-if="recipe.vegan"><img src="../assets/vegan.png" class="vegan" /></span>
         <span v-if="recipe.glutenFree"><img src="../assets/glutenfree.png" class="glutenfree" /></span>
@@ -24,10 +25,9 @@
               @change="toggleFavorite"
             >
             <img
-              :src="isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png')"
+              :src="favoriteImage"
               alt="Favorite"
               class="favorite-icon"
-              style="width: 20px; height: 20px;"
             >
           </label>
         </div>
@@ -48,7 +48,8 @@ export default {
   data() {
     return {
       image_load: true,
-      isFavorite: this.getFavoriteState(this.recipe)
+      isFavorite: this.getFavoriteState(this.recipe),
+      isViewed: this.checkIfViewed(this.recipe.id)
     };
   },
   computed: {
@@ -80,13 +81,30 @@ export default {
         localStorage.setItem('favorites', JSON.stringify(favorites));
       }
     },
-    loadImage() {
-      this.image_load = true;
+    markAsViewed() {
+      let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
+      if (!viewedRecipes.includes(this.recipe.id)) {
+        viewedRecipes.push(this.recipe.id);
+        localStorage.setItem('viewedRecipes', JSON.stringify(viewedRecipes));
+        this.isViewed = true; // Update the state to show the viewed icon
+      }
+    },
+    checkIfViewed(recipeId) {
+      let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
+      return viewedRecipes.includes(recipeId);
     },
     getFavoriteState(recipe) {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
       return favorites.some(r => r.id === recipe.id);
     }
+  },
+  created() {
+    this.isFavorite = this.getFavoriteState(this.recipe);
+    this.isViewed = this.checkIfViewed(this.recipe.id);
+  },
+  updated() {
+    this.isFavorite = this.getFavoriteState(this.recipe);
+    this.isViewed = this.checkIfViewed(this.recipe.id);
   }
 };
 </script>
@@ -94,10 +112,10 @@ export default {
 <style scoped>
 .recipe-card {
   margin-bottom: 20px;
-  margin-left: 120px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-left: 120px;
 }
 
 .card-img-link {
@@ -105,6 +123,7 @@ export default {
   overflow: hidden;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  position: relative;
 }
 
 .recipe-image {
@@ -164,4 +183,11 @@ export default {
 .btn-group-toggle {
   margin-left: auto;
 }
+
+.viewed-icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
 </style>
