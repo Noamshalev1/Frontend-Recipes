@@ -30,6 +30,7 @@
               </li>
             </ol>
           </div>
+          <b-button @click="goToPreparationPage">Go to Preparation Page</b-button>
         </div>
       </div>
       <!-- <pre>
@@ -104,6 +105,11 @@ export default {
     } catch (error) {
       console.log(error);
     }
+  },
+  methods:{
+    goToPreparationPage() {
+      this.$router.push({ name: "recipeprep", params: { id: this.$route.params.recipeId } });
+    },
   }
 };
 </script>
