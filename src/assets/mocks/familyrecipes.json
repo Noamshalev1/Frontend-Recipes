@@ -2,7 +2,7 @@
     {
       "id": 1,
       "title": "חלת שבת",
-      "image": ["halah.jpg"],
+      "image": ["halah.jpg","halah2.jpg","halah3.jpg"],
       "ingredients": [
         "חצי קילו קמח",
         "כף שמרים יבשים",
@@ -18,7 +18,7 @@
     {
       "id": 2,
       "title": "מטבוחה של סבתא",
-      "image": ["matbuha.jpg"],
+      "image": ["matbuha.jpg","matbuha2.jpg","matbuha3.jpg"],
       "ingredients": [
         "עגבניות מקולפות",
         "גמבה אדומה",

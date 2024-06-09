@@ -1,20 +1,36 @@
 <template>
   <div class="recipe-preview">
     <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }">
+      <!-- This can be used if you need a clickable link -->
     </router-link>
     <div class="recipe-footer">
-        <div :title="recipe.title" class="recipe-title">
-          {{ recipe.title }}
-        </div>
-        <div class="image-container">
-          <img v-if="recipe.image" :src="getImageUrl(recipe.image)" class="recipe-image"/>
-        </div>
-        <ul class="recipe-overview">
-          <li>מרכיבים: {{ recipe.ingredients.join(', ') }}</li>
-          <li>הכנה: {{ recipe.preparation }}</li>
-          <li>נהוג להכין: {{ recipe.when }}</li>
-          <li>של מי המתכון: {{ recipe.owner }}</li>
-        </ul>
+      <div :title="recipe.title" class="recipe-title">
+        {{ recipe.title }}
+      </div>
+      <div class="image-container">
+        <b-carousel
+          id="recipe-carousel"
+          v-if="recipe.image && recipe.image.length"
+          :interval="4000"
+          controls
+          indicators
+          background="#ababab"
+        >
+          <b-carousel-slide
+            v-for="(img, index) in recipe.image"
+            :key="index"
+            :img-src="getImageUrl(img)"
+            :alt="'Image ' + (index + 1)"
+            class="recipe-image"
+          ></b-carousel-slide>
+        </b-carousel>
+      </div>
+      <ul class="recipe-overview">
+        <li>מרכיבים: {{ recipe.ingredients.join(', ') }}</li>
+        <li>הכנה: {{ recipe.preparation }}</li>
+        <li>נהוג להכין: {{ recipe.when }}</li>
+        <li>של מי המתכון: {{ recipe.owner }}</li>
+      </ul>
     </div>
   </div>
 </template>
@@ -74,19 +90,24 @@ export default {
 }
 
 .image-container {
-  display: flex;
-  justify-content: center;
+  width: 100%; /* Adjust the width as needed */
+  max-width: 400px; /* Maximum width of the container */
+  height: 500px; /* Fixed height for the container */
   margin-bottom: 10px;
+  overflow: hidden; /* Ensures any overflowed content is hidden */
+  position: relative; /* For better positioning of child elements */
+  margin-left: 250px;
 }
 
 .recipe-image {
-  max-width: 250px;
-  max-height: 250px;
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the entire container */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+
 
 .recipe-overview {
   list-style-type: none;
