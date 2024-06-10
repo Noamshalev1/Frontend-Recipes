@@ -26,12 +26,17 @@
         </b-carousel>
       </div>
       <ul class="recipe-overview">
-        <li>מרכיבים: {{ recipe.ingredients.join(', ') }}</li>
+        <li>מרכיבים: {{ ingredientNames}}</li>
         <li>הכנה: {{ recipe.preparation }}</li>
         <li>נהוג להכין: {{ recipe.when }}</li>
         <li>של מי המתכון: {{ recipe.owner }}</li>
       </ul>
     </div>
+    <div class="text-center mt-3">
+            <b-button variant="danger" size="sm" @click="goToPreparationPage">
+              <b-icon icon="play-circle"></b-icon> Prepare
+            </b-button>
+          </div>
   </div>
 </template>
 
@@ -44,6 +49,11 @@ export default {
       required: true
     }
   },
+  computed: {
+  ingredientNames() {
+    return this.recipe ? this.recipe.ingredients.map(ingredient => ingredient.name).join(', ') : '';
+  }
+},
   methods: {
     getImageUrl(image) {
       try {
@@ -52,6 +62,9 @@ export default {
         console.error(`Image not found: ${image}`);
         return '';
       }
+    },
+    goToPreparationPage() {
+      this.$router.push({ name: "recipeprep", params: { id: this.recipe.id } });
     }
   }
 };

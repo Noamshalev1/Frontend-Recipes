@@ -3,7 +3,7 @@
       <div v-if="recipe">
         <div class="text-center mb-4">
           <h1 class="display-4">{{ recipe.title }}</h1>
-          <img :src="recipe.image" alt="Recipe Image" class="img-fluid rounded" />
+          <img :src="recipe.image" alt="Recipe Image" class="img-fluid rounded recipe-image" />
         </div>
         <div class="row">
           <div class="col-md-6 mb-4">
@@ -31,6 +31,7 @@
   </template>
   
   <script>
+  import familyrecipes from "../assets/mocks/familyrecipes.json";
   export default {
     name: "recipeprep",
     data() {
@@ -41,20 +42,36 @@
       };
     },
     methods: {
+      getImageUrl(image) {
+        try {
+          return require(`@/assets/${image}`);
+        } catch (e) {
+          console.error(`Image not found: ${image}`);
+          return '';
+        }
+      },
       async fetchRecipe() {
         const recipeId = this.$route.params.id;
-        const localRecipes = JSON.parse(localStorage.getItem("userRecipes") || "[]");
+        const localRecipes = familyrecipes || "[]";
+        console.log(localRecipes);
         let data;
         
         const localRecipe = localRecipes.find(r => r.id === recipeId);
         if (localRecipe) {
           data = localRecipe;
+          this.recipe = {
+          id: data.id,
+          title: data.title,
+          image: this.getImageUrl(data.image[0]),
+          ingredients: data.ingredients,
+          preparation: data.preparation,
+        };
+        this.multipliedIngredients = this.recipe.ingredients;
         } else {
           const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=b1a72f1616ff413e984ea8dc1377d964`);
           data = await response.json();
-        }
-        
-        this.recipe = {
+
+          this.recipe = {
           id: data.id,
           title: data.title,
           image: data.image,
@@ -68,6 +85,7 @@
         };
         this.multipliedIngredients = [...this.recipe.ingredients];
         this.loadProgress();
+        } 
       },
       multiplyIngredients() {
         this.multipliedIngredients = this.multipliedIngredients.map(ingredient => ({
@@ -100,8 +118,9 @@
   
   <style scoped>
   .recipe-image {
-    max-width: 100%;
-    height: auto;
+    width: 400px; /* Set a specific width */
+    height: 300px; /* Set a specific height */
+    object-fit: cover; /* Ensures the image covers the specified dimensions while maintaining aspect ratio */
   }
   </style>
   
