@@ -2,7 +2,8 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6 left-column">
-        <RecipePreviewList title="Explore these recipes" class="RandomRecipes" />
+        <RecipePreviewList ref="recipeList" title="Explore these recipes" class="RandomRecipes" />
+        <button @click="generateRandomRecipes" class="btn btn-primary">Show More Recipes</button>
       </div>
       <div class="col-md-6 right-column">
         <div class="user-section">
@@ -29,6 +30,16 @@ export default {
   components: {
     RecipePreviewList,
     Login
+  },
+  data() {
+    return {
+      randomKey: 0
+    };
+  },
+  methods: {
+    generateRandomRecipes() {
+      this.$refs.recipeList.updateRecipes();
+    }
   }
 };
 </script>
@@ -70,8 +81,9 @@ export default {
 }
 
 .btn-primary {
-  background-color: #a3c4f3;
+  background-color: #138d56;
   border-color: #a3c4f3;
+  margin-left: 195px;
 }
 
 .blur {
@@ -83,4 +95,5 @@ export default {
   pointer-events: none;
   cursor: default;
 }
+
 </style>
