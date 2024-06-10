@@ -35,15 +35,17 @@ export default {
   components: {
     NewRecipePage
   },
-  mounted()
-  {
-    this.username = this.$root.store.username
-    this.firstName =(users.users[this.username])
+  computed: {
+    username() {
+      return this.$root.store.username;
+    },
+    firstName() {
+      return this.$root.store.firstName || users.users[this.username];
+    }
   },
   data() {
     return {
       showRecipeModal: false,
-      firstName: ""
     };
   },
   methods: {
