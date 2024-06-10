@@ -35,7 +35,7 @@
   {
     "id": 3,
     "title": "אורז אדום של סבתא",
-    "image": ["redrice.jpg"],
+    "image": ["redrice.jpg","redrice2.jpg","tableredrice.jpg"],
     "ingredients": [
       { "name": "כוסות אורז יסמין", "amount": "6", "unit": "" },
       { "name": "כוסות מים", "amount": "6", "unit": "" },

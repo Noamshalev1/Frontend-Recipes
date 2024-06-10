@@ -4,7 +4,9 @@
       :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
       class="card-img-link"
     >
+    <div class="image-container">
       <img v-if="image_load" :src="recipe.image" class="card-img-top recipe-image" @click="markAsViewed()" />
+    </div>
     </router-link>
     <div class="card-body">
       <h5 class="card-title" :title="recipe.title">{{ recipe.title }}</h5>
@@ -131,6 +133,10 @@ export default {
   height: auto;
   object-fit: cover;
 }
+.recipe-image:hover {
+  opacity: 0.3;
+}
+
 
 .card-body {
   padding: 10px;

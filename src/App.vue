@@ -18,7 +18,7 @@
         <b-dropdown-item href="#"><router-link :to="{ name: 'myrecipes' }">My Recipes</router-link></b-dropdown-item>
         <b-dropdown-item href="#"><router-link :to="{ name: 'familyrecipes' }">Family Recipes</router-link></b-dropdown-item>
         </b-dropdown>
-        <h1 class="user-greeting">Hello, {{ $root.store.username }}</h1>|
+        <h1 class="user-greeting">Hello, {{ this.firstName }}</h1>|
         <button @click="Logout">Logout</button>
       </span>
     </div>
@@ -28,15 +28,22 @@
 
 <script>
 import NewRecipePage from './pages/NewRecipePage.vue';
+import users from "./assets/mocks/users.json";
 
 export default {
   name: "App",
   components: {
     NewRecipePage
   },
+  mounted()
+  {
+    this.username = this.$root.store.username
+    this.firstName =(users.users[this.username])
+  },
   data() {
     return {
-      showRecipeModal: false
+      showRecipeModal: false,
+      firstName: ""
     };
   },
   methods: {

@@ -1,4 +1,7 @@
 {
     "users":
-        ["shalevq", "amirro","user1"]
+        {"shalevq": "Noam",
+         "amirrot": "Rotem",
+         "user1": "Shlomi"
+        }
 }

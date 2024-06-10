@@ -9,11 +9,10 @@
     <h2>Who We Are</h2>
     <p>We are two software engineering students doing this project as part of a web development course. We believe in the power of technology to enhance everyday experiences. Our backgrounds in software engineering have enabled us to create Vue Recipes, a platform we are committed to continually improving to better serve our users.</p>
     
-    <h2>Our Previous Works- COMPLETE!!!!!!!!!!!!!!!!!!!</h2>
+    <h2>Our Previous Works</h2>
     <ul class="previous-works">
-      <li><a href="https://link-to-your-project-1.com" target="_blank">Project 1</a></li>
-      <li><a href="https://link-to-your-project-2.com" target="_blank">Project 2</a></li>
-      <li><a href="https://link-to-your-project-3.com" target="_blank">Project 3</a></li>
+      <li><a href="https://wed-2023.github.io/319041208/" target="_blank">Assingment 1 - Rotem</a></li>
+      <li><a href="https://wed-2023.github.io/318467941/" target="_blank">Assingment 1 - Noam</a></li>
     </ul>
     
     <h2>Our Features</h2>
