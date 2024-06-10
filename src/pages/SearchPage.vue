@@ -31,7 +31,9 @@
       </b-input-group>
       <b-input-group class="mt-3">
         <b-dropdown :text="selectedCuisine ? selectedCuisine : 'Select Cuisine'" variant="secondary">
-          <b-dropdown-item v-for="cuisine in cuisines" :key="cuisine" @click="setCuisine(cuisine)">{{ cuisine }}</b-dropdown-item>
+          <div style="max-height: 200px; overflow-y: auto;">          
+            <b-dropdown-item v-for="cuisine in cuisines" :key="cuisine" @click="setCuisine(cuisine)">{{ cuisine }}</b-dropdown-item>
+        </div>
         </b-dropdown>
         <b-dropdown :text="selectedDiet ? selectedDiet : 'Select Diet'" variant="secondary">
           <b-dropdown-item v-for="diet in diets" :key="diet" @click="setDiet(diet)">{{ diet }}</b-dropdown-item>
@@ -130,8 +132,9 @@ export default {
         apiKey: apiKey,
         cuisine: this.selectedCuisine,
         diet: this.selectedDiet,
-        intolerances: this.selectedIntolerances.join(',')
-      };
+        intolerances: this.selectedIntolerances.join(','),
+        addRecipeInformation: true // Add this parameter to include detailed recipe information
+    };
 
       // Remove empty parameters
       Object.keys(params).forEach(key => {

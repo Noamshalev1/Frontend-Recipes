@@ -15,7 +15,7 @@
             </ul>
             <b-button variant="primary" class="mt-3" @click="multiplyIngredients">Double Ingredients</b-button>
           </div>
-          <div class="col-md-6 mb-4">
+          <div class="col-md-6 mb-4" v-if="recipe.instructions && recipe.instructions.length">
             <h2 class="h4">Preparation Steps</h2>
             <ul class="list-group">
               <li class="list-group-item" v-for="(step, index) in recipe.instructions" :key="index">

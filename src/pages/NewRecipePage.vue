@@ -27,18 +27,18 @@
       <b-form-group label="Instructions:">
         <b-form-textarea v-model="recipe.instructions" rows="5" required></b-form-textarea>
       </b-form-group>
-      <b-button type="submit" variant="primary" @clicl="createRecipe">Submit</b-button>
+      <b-button type="submit" variant="primary">Submit</b-button>
     </b-form>
   </b-modal>
 </template>
 
 <script>
 export default {
-  props: 
-    ['showModal'],
+  props: ['showModal'],
   data() {
     return {
       recipe: {
+        id: '',
         title: '',
         summary: '',
         readyInMinutes: 0,
@@ -46,13 +46,11 @@ export default {
         ingredients: [
           { name: '', amount: null, unit: 'tsp' }
         ],
-        instructions: ''
+        instructions: '',
+        image: '' // Add this field if you want to include an image
       },
-      units: ['tsp', 'Tbsp', 'cup', 'ml', 'l', 'g', 'kg', 'pinches', 'servings', 'cloves', 'ounces'] // Example units
+      units: ['tsp', 'Tbsp', 'cup', 'ml', 'l', 'g', 'kg', 'pinches', 'servings', 'cloves', 'ounces']
     };
-  },
-  mounted() {
-    this.loadRecipes();
   },
   methods: {
     addIngredient() {
@@ -62,26 +60,21 @@ export default {
       this.recipe.ingredients.splice(index, 1);
     },
     createRecipe() {
-  // Check if there are stored recipes in localStorage
+      this.recipe.id = Date.now().toString(); // Generate a unique ID
       let storedRecipes = localStorage.getItem('myRecipes');
-      // Parse the stored recipes or initialize an empty array if null
       let recipes = storedRecipes ? JSON.parse(storedRecipes) : [];
-      // Add the new recipe to the array
       recipes.push(this.recipe);
-      // Save the updated recipes array back to localStorage
       localStorage.setItem('myRecipes', JSON.stringify(recipes));
-      // Emit the event to notify that the recipe has been saved
       this.$emit('recipe-saved');
-      // Hide the modal
       this.showModal = false;
-      // Reset the recipe form
       this.resetRecipe();
     },
     onModalClose() {
-      this.$emit('hide'); // Make sure this emits after the modal is set to close
+      this.$emit('hide');
     },
     resetRecipe() {
       this.recipe = {
+        id: '',
         title: '',
         summary: '',
         readyInMinutes: 0,
@@ -89,13 +82,13 @@ export default {
         ingredients: [
           { name: '', amount: null, unit: 'tsp' }
         ],
-        instructions: ''
+        instructions: '',
+        image: ''
       };
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
-
 </style>

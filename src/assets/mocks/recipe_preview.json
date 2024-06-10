@@ -14,7 +14,7 @@
     {
       "id": 123456,
       "image": "https://img.spoonacular.com/recipes/123456-556x370.jpg",
-      "title": "Crispy Fried Tofu Sandwich with Avocado & Slaw",
+      "title": "Apple Delight Canadian 1962",
       "readyInMinutes": 30,
       "aggregateLikes": 150,
       "vegetarian": true,
@@ -26,7 +26,7 @@
     {
       "id": 234567,
       "image": "https://img.spoonacular.com/recipes/234567-556x370.jpg",
-      "title": "Lemon Garlic Shrimp Pasta",
+      "title": "Butterscotch Drop Scones",
       "readyInMinutes": 25,
       "aggregateLikes": 320,
       "vegetarian": false,
@@ -38,7 +38,7 @@
     {
       "id": 345678,
       "image": "https://img.spoonacular.com/recipes/345678-556x370.jpg",
-      "title": "Quinoa Salad with Avocado and Feta",
+      "title": "Peppermint-topped Brownies",
       "readyInMinutes": 20,
       "aggregateLikes": 280,
       "vegetarian": true,
@@ -50,7 +50,7 @@
     {
       "id": 456789,
       "image": "https://img.spoonacular.com/recipes/456789-556x370.jpg",
-      "title": "Spicy Black Bean Burger",
+      "title": "Apricot Turkey Pinwheels",
       "readyInMinutes": 40,
       "aggregateLikes": 180,
       "vegetarian": true,
@@ -62,7 +62,7 @@
     {
       "id": 567890,
       "image": "https://img.spoonacular.com/recipes/567890-556x370.jpg",
-      "title": "Thai Green Curry with Vegetables",
+      "title": "Caesar Chicken Tortellini",
       "readyInMinutes": 35,
       "aggregateLikes": 210,
       "vegetarian": true,

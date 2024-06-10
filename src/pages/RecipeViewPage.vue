@@ -22,94 +22,78 @@
               </li>
             </ul>
           </div>
-          <div class="wrapped">
+          <div class="wrapped" v-if="recipe._instructions && recipe._instructions.length">
             Instructions:
             <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
+              <li v-for="(s, index) in recipe._instructions" :key="index">
                 {{ s.step }}
               </li>
             </ol>
           </div>
-          <b-button @click="goToPreparationPage">Go to Preparation Page</b-button>
+          <div class="text-center mt-3">
+            <b-button variant="primary" size="sm" @click="goToPreparationPage">
+              <b-icon icon="play-circle"></b-icon> Prepare
+            </b-button>
+          </div>
         </div>
       </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
     </div>
   </div>
 </template>
 
 <script>
-import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      recipe: null
+      recipe: null,
+      apiKey: 'b1a72f1616ff413e984ea8dc1377d964' // Add your Spoonacular API key here
     };
   },
   async created() {
     try {
+      const recipeId = this.$route.params.recipeId;
       let response;
-      // response = this.$route.params.response;
 
+      // Fetch the recipe data from the API
       try {
-        // response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/" + this.$route.params.recipeId,
-        //   {
-        //     withCredentials: true
-        //   }
-        // );
-
-        response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-
-        // console.log("response.status", response.status);
-        //if (response.status !== 200) this.$router.replace("/NotFound");
+        response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${this.apiKey}`);
       } catch (error) {
-        console.log("error.response.status", error.response.status);
+        console.error("Error fetching recipe from API:", error.response ? error.response.status : error.message);
         this.$router.replace("/NotFound");
         return;
       }
 
-      let {
+      const {
         analyzedInstructions,
-        instructions,
         extendedIngredients,
         aggregateLikes,
         readyInMinutes,
         image,
         title
-      } = response.data.recipe;
+      } = response.data;
 
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
+      const _instructions = analyzedInstructions
+        .map(instruction => instruction.steps)
+        .reduce((allSteps, steps) => [...allSteps, ...steps], []);
 
-      let _recipe = {
-        instructions,
+      this.recipe = {
         _instructions,
-        analyzedInstructions,
         extendedIngredients,
         aggregateLikes,
         readyInMinutes,
         image,
         title
       };
-
-      this.recipe = _recipe;
     } catch (error) {
-      console.log(error);
+      console.error("Unexpected error:", error);
     }
   },
-  methods:{
+  methods: {
     goToPreparationPage() {
       this.$router.push({ name: "recipeprep", params: { id: this.$route.params.recipeId } });
-    },
+    }
   }
 };
 </script>
@@ -127,7 +111,4 @@ export default {
   margin-right: auto;
   width: 50%;
 }
-/* .recipe-header{
-
-} */
 </style>
