@@ -31,10 +31,10 @@
       </b-input-group>
       <b-input-group class="mt-3">
         <b-dropdown :text="selectedCuisine ? selectedCuisine : 'Select Cuisine'" variant="secondary">
-          <b-dropdown-item v-for="cuisine in cuisines" :key="cuisine" @click="selectedCuisine = cuisine">{{ cuisine }}</b-dropdown-item>
+          <b-dropdown-item v-for="cuisine in cuisines" :key="cuisine" @click="setCuisine(cuisine)">{{ cuisine }}</b-dropdown-item>
         </b-dropdown>
         <b-dropdown :text="selectedDiet ? selectedDiet : 'Select Diet'" variant="secondary">
-          <b-dropdown-item v-for="diet in diets" :key="diet" @click="selectedDiet = diet">{{ diet }}</b-dropdown-item>
+          <b-dropdown-item v-for="diet in diets" :key="diet" @click="setDiet(diet)">{{ diet }}</b-dropdown-item>
         </b-dropdown>
         <b-dropdown :text="`Selected Intolerances (${selectedIntolerances.length})`" variant="secondary">
           <b-dropdown-item v-for="intolerance in intolerances" :key="intolerance" @click="toggleIntolerance(intolerance)">
@@ -56,16 +56,13 @@
       </b-input-group>
     </div>
     <div class="recipes">
-      <div v-if="searchQuery.length === 0">
-        <!-- Show nothing if there's no query -->
+      <div v-if="recipes.length === 0">
+        <p>No recipes found. Please adjust your search or filters.</p>
       </div>
-      <div class="row" v-else-if="filteredRecipes.length">
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" v-for="recipe in limitedFilteredRecipes" :key="recipe.id">
+      <div class="row" v-else>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" v-for="recipe in limitedRecipes" :key="recipe.id">
           <RecipePreview :recipe="recipe" />
         </div>
-      </div>
-      <div v-else>
-        <p>No recipes found. Please enter a search query.</p>
       </div>
     </div>
   </div>
@@ -73,7 +70,7 @@
 
 <script>
 import RecipePreview from "../../src/components/RecipePreview.vue";
-import recipes from '../assets/mocks/recipe_preview.json';
+import axios from 'axios';
 
 export default {
   components: {
@@ -83,21 +80,22 @@ export default {
     return {
       searchQuery: "",
       recipes: [],
-      filteredRecipes: [],
       resultsCount: 5,
       cuisines: [
-        'African', 'American', 'British', 'Japanese', 'Jewish',
-        'Mexican', 'Spanish', 'Thai', 'Vietnamese', 'Nordic',
-        'European', 'French'
+        'African','Asian', 'American', 'British','Cajun','Caribbean','Chinese','Eastern European','European',
+        'French','German','Greek','Indian','Irish','Italian','Japanese', 'Jewish','Korean','Latin American','Mediterranean','Mexican',
+        'Middle Eastern','Nordic','Southern',
+        'Spanish', 'Thai', 'Vietnamese', 
+         
       ],
       selectedCuisine: null,
       diets: [
         'Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian',
-        'Ovo-Vegetarian', 'Vegan', 'Pescetarian', 'Paleo', 'Whole30'
+        'Ovo-Vegetarian', 'Vegan', 'Pescetarian', 'Paleo','Primal','Low FODMAP', 'Whole30'
       ],
       selectedDiet: null,
       intolerances: [
-        'Dairy', 'Egg', 'Gluten', 'Peanut', 'Seafood',
+        'Dairy', 'Egg', 'Gluten','Grain', 'Peanut', 'Seafood',
         'Sesame', 'Shellfish', 'Soy', 'Sulfite', 'Tree Nut', 'Wheat'
       ],
       selectedIntolerances: [],
@@ -106,75 +104,53 @@ export default {
     };
   },
   computed: {
-    limitedFilteredRecipes() {
-      return this.filteredRecipes.slice(0, this.resultsCount);
+    limitedRecipes() {
+      return this.recipes.slice(0, this.resultsCount);
     }
   },
   created() {
-    this.recipes = recipes;
-    this.loadLastSearch();
+    this.performSearch(); // Load recipes on page load
   },
   methods: {
     changeSort(option) {
       if (this.sortOption === option) {
-        // If already selected, do nothing
         return;
       }
       this.sortOption = option;
-      this.performSearch(); // Re-run the search with the new sort settings
+      this.performSearch();
     },
     performSearch() {
-      this.searchQuery = this.searchQuery.toLowerCase();
-      if (this.searchQuery) {
-        this.filteredRecipes = this.recipes.filter(recipe => {
-          if (this.searchQuery === "vegan") {
-            return recipe.vegan;
-          } else if (this.searchQuery === "vegetarian") {
-            return recipe.vegetarian;
-          } else if (this.searchQuery === "gluten free") {
-            return recipe.glutenFree;
-          } else {
-            return recipe.title.toLowerCase().includes(this.searchQuery) ||
-                   recipe.summary.toLowerCase().includes(this.searchQuery);
-          }
+      const apiKey = 'b1a72f1616ff413e984ea8dc1377d964'; // Replace with your Spoonacular API key
+      const baseURL = 'https://api.spoonacular.com/recipes/complexSearch';
+
+      let params = {
+        query: this.searchQuery || '', // Allow search with filters even if query is empty
+        number: this.resultsCount,
+        sort: this.sortOption,
+        apiKey: apiKey,
+        cuisine: this.selectedCuisine,
+        diet: this.selectedDiet,
+        intolerances: this.selectedIntolerances.join(',')
+      };
+
+      // Remove empty parameters
+      Object.keys(params).forEach(key => {
+        if (!params[key]) {
+          delete params[key];
+        }
+      });
+
+      axios.get(baseURL, { params })
+        .then(response => {
+          this.recipes = response.data.results;
+        })
+        .catch(error => {
+          console.error('Error fetching recipes:', error);
         });
-        if (this.selectedCuisine) {
-          this.filteredRecipes = this.filteredRecipes.filter(recipe => recipe.cuisine === this.selectedCuisine);
-        }
-        if (this.selectedDiet) {
-          this.filteredRecipes = this.filteredRecipes.filter(recipe => recipe.diet === this.selectedDiet);
-        }
-        if (this.selectedIntolerances.length) {
-          this.filteredRecipes = this.filteredRecipes.filter(recipe =>
-            this.selectedIntolerances.every(intolerance => recipe.intolerances.includes(intolerance))
-          );
-        }
-        this.filteredRecipes.sort((a, b) => {
-          if (this.sortOption === 'popularity') {
-            return this.sortDirection === 'asc' ? a.aggregateLikes - b.aggregateLikes : b.aggregateLikes - a.aggregateLikes;
-          } else if (this.sortOption === 'prepTime') {
-            return this.sortDirection === 'asc' ? a.readyInMinutes - b.readyInMinutes : b.readyInMinutes - a.readyInMinutes;
-          }
-          return 0;
-        });
-        this.saveLastSearch(this.searchQuery);
-      } else {
-        this.filteredRecipes = [];
-      }
-    },
-    saveLastSearch(query) {
-      localStorage.setItem("lastSearch", query);
-    },
-    loadLastSearch() {
-      const lastSearch = localStorage.getItem("lastSearch");
-      if (lastSearch) {
-        this.searchQuery = lastSearch;
-        this.performSearch();
-      }
     },
     updateResultsCount(count) {
       this.resultsCount = count;
-      this.performSearch(); // Refresh search results with new count
+      this.performSearch();
     },
     toggleIntolerance(intolerance) {
       const index = this.selectedIntolerances.indexOf(intolerance);
@@ -185,6 +161,14 @@ export default {
       }
       this.performSearch();
     },
+    setCuisine(cuisine) {
+      this.selectedCuisine = cuisine;
+      this.performSearch();
+    },
+    setDiet(diet) {
+      this.selectedDiet = diet;
+      this.performSearch();
+    }
   },
 };
 </script>
