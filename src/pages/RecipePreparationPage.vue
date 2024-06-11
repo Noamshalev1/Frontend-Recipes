@@ -3,7 +3,7 @@
       <div v-if="recipe">
         <div class="text-center mb-4">
           <h1 class="display-4">{{ recipe.title }}</h1>
-          <img :src="recipe.image" alt="Recipe Image" class="img-fluid rounded recipe-image" />
+          <img :src="recipe.image|| defaultImage" alt="Recipe Image" class="img-fluid rounded recipe-image" />
         </div>
         <div class="row">
           <div class="col-md-6 mb-4">
@@ -39,6 +39,7 @@
         recipe: null,
         multipliedIngredients: [],
         stepCompleted: [],
+        defaultImage: require('@/assets/myrecipes.png')
       };
     },
     methods: {
@@ -52,12 +53,15 @@
       },
       async fetchRecipe() {
         const recipeId = this.$route.params.id;
-        const localRecipes = familyrecipes || "[]";
-        console.log(localRecipes);
+        const collection = this.$route.query.collection;
         let data;
-        
-        const localRecipe = localRecipes.find(r => r.id === recipeId);
-        if (localRecipe) {
+        let localRecipes = [];
+        let localRecipe = [];
+
+        // family recipe
+        if (collection === 'family') {
+          localRecipes = familyrecipes || "[]";
+          localRecipe = localRecipes.find(r => r.id === recipeId);
           data = localRecipe;
           this.recipe = {
           id: data.id,
@@ -67,7 +71,38 @@
           preparation: data.preparation,
         };
         this.multipliedIngredients = this.recipe.ingredients;
-        } else {
+
+        // myrecipes recipe
+        } else if (collection === 'myrecipes') {
+          localRecipes = JSON.parse(localStorage.getItem('myRecipes') || '[]');
+          localRecipe = localRecipes.find(r => r.id === recipeId);
+          data = localRecipe;
+
+          let ingredients = [];
+
+      // Process each ingredient in the array
+        data.ingredients.forEach(ingredient => {
+          ingredients.push({
+            name: ingredient.name,
+            amount: ingredient.amount.metric.value,
+            unit: ingredient.amount.metric.unit,
+          });
+        });
+          
+          this.recipe = {
+          id: data.id,
+          title: data.title,
+          ingredients: ingredients,
+          instructions: data.analyzedInstructions && data.analyzedInstructions[0]
+            ? data.analyzedInstructions[0].steps.map(step => step.step)
+            : [] // Default to an empty array if instructions are undefined
+        };
+          this.multipliedIngredients = [...this.recipe.ingredients];
+        }
+
+        //from api
+        else{
+          localRecipe = localRecipes.find(r => r.id === recipeId);
           const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=b1a72f1616ff413e984ea8dc1377d964`);
           data = await response.json();
 

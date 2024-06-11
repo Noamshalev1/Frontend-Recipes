@@ -30,6 +30,7 @@
         <li>הכנה: {{ recipe.preparation }}</li>
         <li>נהוג להכין: {{ recipe.when }}</li>
         <li>של מי המתכון: {{ recipe.owner }}</li>
+        <li>מספר מנות: {{ recipe.servings }}</li>
       </ul>
     </div>
     <div class="text-center mt-3">
