@@ -87,8 +87,9 @@ export default {
 }
 
 .btn-primary {
-  background-color: #a3c4f3;
+  background-color: #138d56;
   border-color: #a3c4f3;
+  margin-left: 195px;
 }
 
 .blur {
@@ -100,4 +101,5 @@ export default {
   pointer-events: none;
   cursor: default;
 }
+
 </style>
