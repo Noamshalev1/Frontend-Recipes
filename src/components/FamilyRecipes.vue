@@ -64,7 +64,7 @@ export default {
       }
     },
     goToPreparationPage() {
-      this.$router.push({ name: "recipeprep", params: { id: this.recipe.id } });
+      this.$router.push({ name: "recipeprep", params: { id: this.recipe.id },query: { collection:"family" } });
     }
   }
 };

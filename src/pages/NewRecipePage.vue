@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       recipe: {
-        id: '',
+        id: null,
         title: '',
         summary: '',
         readyInMinutes: 0,
@@ -47,7 +47,6 @@ export default {
           { name: '', amount: null, unit: 'tsp' }
         ],
         instructions: '',
-        image: '' // Add this field if you want to include an image
       },
       units: ['tsp', 'Tbsp', 'cup', 'ml', 'l', 'g', 'kg', 'pinches', 'servings', 'cloves', 'ounces']
     };
@@ -60,10 +59,49 @@ export default {
       this.recipe.ingredients.splice(index, 1);
     },
     createRecipe() {
-      this.recipe.id = Date.now().toString(); // Generate a unique ID
+      this.recipe.id = Date.now(); // Generate a unique ID
       let storedRecipes = localStorage.getItem('myRecipes');
       let recipes = storedRecipes ? JSON.parse(storedRecipes) : [];
-      recipes.push(this.recipe);
+      
+      // Transform ingredients to match Spoonacular's format
+      const ingredients = this.recipe.ingredients.map(ingredient => ({
+        name: ingredient.name,
+        amount: {
+          metric: {
+            value: ingredient.amount,
+            unit: ingredient.unit
+          },
+          us: {
+            value: ingredient.amount, // Assuming the same for simplicity
+            unit: ingredient.unit
+          }
+        }
+      }));
+      
+      // Construct the recipe object in Spoonacular format
+      const newRecipe = {
+        id: this.recipe.id,
+        title: this.recipe.title,
+        summary: this.recipe.summary,
+        readyInMinutes: this.recipe.readyInMinutes,
+        servings: this.recipe.servings,
+        ingredients: ingredients,
+        instructions: this.recipe.instructions,
+        image: this.recipe.image,
+        analyzedInstructions: [
+          {
+            name: "",
+            steps: this.recipe.instructions.split('\n').map((instruction, index) => ({
+              number: index + 1,
+              step: instruction,
+              ingredients: [],
+              equipment: []
+            }))
+          }
+        ]
+      };
+
+      recipes.push(newRecipe);
       localStorage.setItem('myRecipes', JSON.stringify(recipes));
       this.$emit('recipe-saved');
       this.showModal = false;
@@ -74,7 +112,7 @@ export default {
     },
     resetRecipe() {
       this.recipe = {
-        id: '',
+        id: null,
         title: '',
         summary: '',
         readyInMinutes: 0,
@@ -83,7 +121,7 @@ export default {
           { name: '', amount: null, unit: 'tsp' }
         ],
         instructions: '',
-        image: ''
+      
       };
     }
   }
