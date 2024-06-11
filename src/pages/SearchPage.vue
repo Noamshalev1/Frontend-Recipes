@@ -122,7 +122,15 @@ export default {
         return;
       }
       this.sortOption = option;
-      this.performSearch();
+      
+      this.recipes.sort((a, b) => {
+        if (this.sortOption === 'popularity') {
+          return this.sortDirection === 'asc' ? a.aggregateLikes - b.aggregateLikes : b.aggregateLikes - a.aggregateLikes;
+        } else if (this.sortOption === 'prepTime') {
+          return this.sortDirection === 'asc' ? a.readyInMinutes - b.readyInMinutes : b.readyInMinutes - a.readyInMinutes;
+        }
+        return 0;
+  });
     },
     performSearch() {
       const apiKey = 'b1a72f1616ff413e984ea8dc1377d964'; // Replace with your Spoonacular API key
@@ -153,6 +161,7 @@ export default {
         .catch(error => {
           console.error('Error fetching recipes:', error);
         });
+
         this.saveLastSearch(this.searchQuery);
     },
     saveLastSearch() {
