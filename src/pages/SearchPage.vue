@@ -58,7 +58,10 @@
       </b-input-group>
     </div>
     <div class="recipes">
-      <div v-if="recipes.length === 0">
+      <div v-if="searchQuery.length === 0">
+      <!-- Show nothing if there's no query -->
+      </div>
+      <div v-else-if="recipes.length === 0">
         <p>No recipes found. Please adjust your search or filters.</p>
       </div>
       <div class="row" v-else>
@@ -111,7 +114,7 @@ export default {
     }
   },
   created() {
-    this.performSearch(); // Load recipes on page load
+    this.loadLastSearch();
   },
   methods: {
     changeSort(option) {
@@ -150,6 +153,17 @@ export default {
         .catch(error => {
           console.error('Error fetching recipes:', error);
         });
+        this.saveLastSearch(this.searchQuery);
+    },
+    saveLastSearch() {
+      localStorage.setItem('lastSearch', this.searchQuery);
+    },
+    loadLastSearch() {
+      const lastSearch = localStorage.getItem('lastSearch');
+      if (lastSearch) {
+        this.searchQuery = lastSearch;
+        this.performSearch();
+      }
     },
     updateResultsCount(count) {
       this.resultsCount = count;
