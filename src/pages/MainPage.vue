@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6 left-column">
-        <RecipePreviewList ref="recipeList" title="Explore these recipes" class="RandomRecipes" />
+        <RecipePreviewList ref="recipeList" title="Explore these recipes" class="RandomRecipes" listType="random" />
         <button @click="generateRandomRecipes" class="btn btn-primary">Show More Recipes</button>
       </div>
       <div class="col-md-6 right-column">
@@ -13,7 +13,8 @@
           <span v-else>
             <RecipePreviewList
               title="Last Viewed Recipes"
-              class="RandomRecipes"
+              class="LastViewedRecipes"
+              listType="lastviewed"
               disabled
             />
           </span>
@@ -40,7 +41,7 @@ export default {
     generateRandomRecipes() {
       this.$refs.recipeList.updateRecipes();
     }
-  }
+  },
 };
 </script>
 

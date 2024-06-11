@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       recipe: null,
-      apiKey: 'b1a72f1616ff413e984ea8dc1377d964' // Add your Spoonacular API key here
+      apiKey: '709325a1a8844ca3ab65110a4d2e4b90' // Add your Spoonacular API key here
     };
   },
   async created() {
@@ -86,6 +86,7 @@ export default {
         image,
         title
       };
+      this.saveToLastViewed();
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -93,6 +94,19 @@ export default {
   methods: {
     goToPreparationPage() {
       this.$router.push({ name: "recipeprep", params: { id: this.$route.params.recipeId } });
+    },
+    saveToLastViewed(){
+    let lastViewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
+      
+      // Add the recipe ID if it doesn't already exist in the list
+      if (!lastViewedRecipes.includes(this.recipe.id)) {
+        lastViewedRecipes.push(this.recipe.id);
+        // Limit to the last 10 viewed recipes (optional)
+        if (lastViewedRecipes.length > 10) {
+          lastViewedRecipes.shift();
+        }
+        localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
+      }
     }
   }
 };

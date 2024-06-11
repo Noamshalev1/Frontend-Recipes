@@ -15,6 +15,7 @@
 <script>
 import RecipePreview from "./RecipePreview.vue";
 import { mockGetRecipesPreview } from "../services/recipes.js";
+import axios from 'axios';
 export default {
   name: "RecipePreviewList",
   components: {
@@ -24,6 +25,10 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    listType: {
+      type: String,
+      default: 'random' // Can be 'lastViewed' or 'random'
     }
   },
   data() {
@@ -36,7 +41,8 @@ export default {
   },
   methods: {
     async updateRecipes() {
-      try {
+      if (this.listType === 'random'){
+        try {
         // const response = await this.axios.get(
         //   this.$root.store.server_domain + "/recipes/random",
         // );
@@ -53,9 +59,66 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      }
+      else{
+        let viewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
+        console.log('Viewed recipes:', viewedRecipes);
+
+        this.recipes = [];
+        // Ensure we have at least 3 viewed recipes
+        if (viewedRecipes.length >= 3) {
+          const recipePromises = [
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 3]),
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 1])
+          ];
+
+          // Wait for all recipe promises to resolve
+          const recipes = await Promise.all(recipePromises);
+          console.log('Fetched recipes:', recipes);
+          this.recipes.push(...recipes);
+        } else {
+          console.log('Not enough viewed recipes to fetch:', viewedRecipes);
+        }
+      }
+    },
+
+  async getrecipe(id) {
+    
+    const apiKey = '709325a1a8844ca3ab65110a4d2e4b90';
+    const recipeId = id;
+    try {
+      const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`);
+      console.log('Recipe API response:', response);
+
+      const {
+        analyzedInstructions,
+        extendedIngredients,
+        aggregateLikes,
+        readyInMinutes,
+        image,
+        title
+      } = response.data;
+      const _instructions = analyzedInstructions
+        .map(instruction => instruction.steps)
+        .reduce((allSteps, steps) => [...allSteps, ...steps], []);
+
+      return {
+        _instructions,
+        extendedIngredients,
+        aggregateLikes,
+        readyInMinutes,
+        image,
+        title,
+        id
+      };
+    } catch (error) {
+      console.error('Error fetching recipe from API:', error.response ? error.response.status : error.message);
+      return null; // Return null to handle the error gracefully
     }
   }
-};
+}
+}
 </script>
 
 <!-- <style lang="scss" scoped>
