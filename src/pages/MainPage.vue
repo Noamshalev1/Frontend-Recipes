@@ -2,7 +2,8 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6 left-column">
-        <RecipePreviewList title="Explore these recipes" class="RandomRecipes" />
+        <RecipePreviewList ref="recipeList" title="Explore these recipes" class="RandomRecipes" />
+        <button @click="generateRandomRecipes" class="btn btn-primary">Show More Recipes</button>
       </div>
       <div class="col-md-6 right-column">
         <div class="user-section">
@@ -29,11 +30,27 @@ export default {
   components: {
     RecipePreviewList,
     Login
-  }
+  },  
+  data() {
+    return {
+      randomKey: 0
+    };
+  },
+  methods: {
+    generateRandomRecipes() {
+      this.$refs.recipeList.updateRecipes();
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+.btn-primary {
+  background-color: #138d56;
+  border-color: #a3c4f3;
+  margin-left: 195px;
+}
+
 .container {
   max-width: 1200px;
   margin: auto;

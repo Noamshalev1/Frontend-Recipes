@@ -201,7 +201,7 @@ import {
 import { mockRegister } from "../services/auth.js";
 import users from "../assets/mocks/users.json";
 export default {
-  name: "Register",
+  name: "register",
   data() {
     return {
       form: {
@@ -226,7 +226,7 @@ export default {
         required,
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha,
-        success: (u)=> !users.users.includes(u)
+        success: (u)=> !users.users[u]
       },
       firstName: {
         required,
@@ -279,10 +279,11 @@ export default {
         // );
         const userDetails = {
           username: this.form.username,
-          password: this.form.password
+          password: this.form.password,
+          firstName: this.firstName
         };
 
-        const response = mockRegister(userDetails, !users.users.includes(this.form.username));
+        const response = mockRegister(userDetails, !users.users[userDetails.username]);
         this.addUser();
 
         this.$router.push("/login");
@@ -317,8 +318,9 @@ export default {
       });
     },
     addUser() {
-      users.users.push(this.form.username);
-    }
+      users.users[userDetails.username] = userDetails.firstName;
+    },
+
   }
 };
 </script>
