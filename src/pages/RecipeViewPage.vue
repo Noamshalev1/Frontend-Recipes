@@ -69,7 +69,7 @@ export default {
     return {
       isFavorite: false,
       recipe: null,
-      apiKey: '709325a1a8844ca3ab65110a4d2e4b90', // Add your Spoonacular API key here
+      apiKey: 'b1a72f1616ff413e984ea8dc1377d964', // Add your Spoonacular API key here
       
     };
   },
@@ -164,7 +164,8 @@ export default {
     getFavoriteState(recipe) {
       
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      return favorites.some(r => r.id === recipe.id.toString());
+      console.log("fav",favorites )
+      return favorites.some(r => r.id.toString() === recipe.id.toString());
     }
   },
   computed: {
@@ -174,7 +175,6 @@ export default {
   },
   updated() {
     this.isFavorite = this.getFavoriteState(this.recipe);
-    // this.isViewed = this.checkIfViewed(this.recipe.id);
   }
 };
 </script>
