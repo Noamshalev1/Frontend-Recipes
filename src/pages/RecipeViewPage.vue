@@ -148,24 +148,22 @@ export default {
     },
     addToFavorites() {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      if (!favorites.some(r => r.id === this.recipe.id.toString())) {
-        favorites.push(this.recipe.toString());
+      if (!favorites.some(r => r.id === this.recipe.id)) {
+        favorites.push(this.recipe);
         localStorage.setItem('favorites', JSON.stringify(favorites));
       }
     },
     removeFromFavorites() {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      let index = favorites.findIndex(r => r.id === this.recipe.id.toString());
+      let index = favorites.findIndex(r => r.id === this.recipe.id);
       if (index !== -1) {
         favorites.splice(index, 1);
         localStorage.setItem('favorites', JSON.stringify(favorites));
       }
     },
     getFavoriteState(recipe) {
-      
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      console.log("fav",favorites )
-      return favorites.some(r => r.id.toString() === recipe.id.toString());
+      return favorites.some(r => r.id === recipe.id);
     }
   },
   computed: {
