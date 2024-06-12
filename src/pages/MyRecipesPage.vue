@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>My Recipes</h2>
+    <h1 class="title">My Recipes</h1>
     <div v-for="recipe in recipes" :key="recipe.id" class="recipe-item">
       <h3>{{ recipe.title }}</h3>
       <img :src="recipe.image || defaultImage" alt="Recipe Image" class="recipe-image" />
@@ -69,4 +69,17 @@ export default {
   width: 300px;
   margin-bottom: 15px;
 }
+.title {
+  font-family: 'Arial', sans-serif;
+  font-size: 3rem;
+  color: #4caf50;
+  text-align: center;
+  padding: 20px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
 </style>

@@ -46,13 +46,6 @@ export default {
   padding: 20px;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 .empty-state {
   font-size: 18px;
   color: #666;
@@ -66,4 +59,17 @@ export default {
   gap: 20px;
   justify-items: center;
 }
+.title {
+  font-family: 'Arial', sans-serif;
+  font-size: 3rem;
+  color: #4caf50;
+  text-align: center;
+  padding: 20px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
 </style>
