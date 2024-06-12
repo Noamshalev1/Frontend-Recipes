@@ -10,6 +10,7 @@
           <div class="wrapped">
             <div class="mb-3">
               <div>
+              <b-icon icon="eye" class="viewed-icon"></b-icon>
               <span v-if="recipe.vegetarian"><img src="../assets/vegiterian.png" class="vegi" /></span>
               <span v-if="recipe.vegan"><img src="../assets/vegan.png" class="vegan" /></span>
               <span v-if="recipe.glutenFree"><img src="../assets/glutenfree.png" class="glutenfree" /></span>
@@ -206,5 +207,10 @@ export default {
 .favorite-icon {
   width: 20px;
   height: 20px;
+}
+.viewed-icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
 </style>
