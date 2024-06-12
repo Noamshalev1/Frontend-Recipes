@@ -9,6 +9,25 @@
         <div class="wrapper">
           <div class="wrapped">
             <div class="mb-3">
+              <div>
+              <span v-if="recipe.vegetarian"><img src="../assets/vegiterian.png" class="vegi" /></span>
+              <span v-if="recipe.vegan"><img src="../assets/vegan.png" class="vegan" /></span>
+              <span v-if="recipe.glutenFree"><img src="../assets/glutenfree.png" class="glutenfree" /></span>
+            </div>
+            <div class="btn-group-toggle">
+            <label class="btn btn-secondary active" style="background-color: white;">
+              <input
+                type="checkbox"
+                v-model="isFavorite"
+                @change="toggleFavorite"
+              >
+              <img
+                :src="favoriteImage"
+                alt="Favorite"
+                class="favorite-icon"
+              >
+            </label>
+        </div>
               <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
               <div>Likes: {{ recipe.aggregateLikes }} likes</div>
             </div>
@@ -43,19 +62,21 @@
 
 <script>
 import axios from 'axios';
-
+import favoriteImage  from '../components/RecipePreview.vue';
 export default {
   data() {
     return {
+      isFavorite: false,
       recipe: null,
-      apiKey: '709325a1a8844ca3ab65110a4d2e4b90' // Add your Spoonacular API key here
+      apiKey: '709325a1a8844ca3ab65110a4d2e4b90', // Add your Spoonacular API key here
+      
     };
   },
   async created() {
     try {
       const recipeId = this.$route.params.recipeId;
       let response;
-
+      
       // Fetch the recipe data from the API
       try {
         response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${this.apiKey}`);
@@ -71,8 +92,13 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
+        vegan,
+        vegetarian,
+        glutenFree,
+        id,
       } = response.data;
+      console.log(response)
 
       const _instructions = analyzedInstructions
         .map(instruction => instruction.steps)
@@ -84,10 +110,15 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
+        vegan,
+        vegetarian,
+        glutenFree,
+        id
       };
-      this.saveToLastViewed();
 
+      this.saveToLastViewed();
+      this.isFavorite= this.getFavoriteState(this.recipe);
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -105,7 +136,44 @@ export default {
         lastViewedRecipes.shift();
       }
       localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
+    },
+    toggleFavorite() {
+      this.isFavorite = !this.isFavorite;
+      if (this.isFavorite) {
+        this.addToFavorites();
+      } else {
+        this.removeFromFavorites();
+      }
+    },
+    addToFavorites() {
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      if (!favorites.some(r => r.id === this.recipe.id.toString())) {
+        favorites.push(this.recipe.toString());
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+      }
+    },
+    removeFromFavorites() {
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      let index = favorites.findIndex(r => r.id === this.recipe.id.toString());
+      if (index !== -1) {
+        favorites.splice(index, 1);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+      }
+    },
+    getFavoriteState(recipe) {
+      
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      return favorites.some(r => r.id === recipe.id.toString());
     }
+  },
+  computed: {
+    favoriteImage() {
+      return this.isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png');
+    }
+  },
+  updated() {
+    this.isFavorite = this.getFavoriteState(this.recipe);
+    // this.isViewed = this.checkIfViewed(this.recipe.id);
   }
 };
 </script>
@@ -122,5 +190,21 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+.vegi {
+  width: 20px;
+  height: auto;
+  margin-right: 5px;
+}
+
+.vegan,
+.glutenfree {
+  width: 25px;
+  height: auto;
+  margin-right: 5px;
+}
+.favorite-icon {
+  width: 20px;
+  height: 20px;
 }
 </style>
