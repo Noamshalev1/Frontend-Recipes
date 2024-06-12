@@ -41,7 +41,44 @@ export default {
   },
   methods: {
     async updateRecipes() {
-      if (this.listType === 'random'){
+      if (this.listType === 'lastviewed'){
+        let viewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
+        console.log('Viewed recipes:', viewedRecipes);
+
+        this.recipes = [];
+        // Ensure we have at least 3 viewed recipes
+        if (viewedRecipes.length >= 3) {
+          const recipePromises = [
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 3])
+          ];
+
+          // Wait for all recipe promises to resolve
+          const recipes = await Promise.all(recipePromises);
+          console.log('Fetched recipes:', recipes);
+          this.recipes.push(...recipes);
+        } else {
+          try {
+        // const response = await this.axios.get(
+        //   this.$root.store.server_domain + "/recipes/random",
+        // );
+
+        const amountToFetch = 3; // Set this to how many recipes you want to fetch
+        const response = mockGetRecipesPreview(amountToFetch);
+
+
+        console.log(response);
+        const recipes = response.data.recipes;
+        console.log(recipes);
+        this.recipes = [];
+        this.recipes.push(...recipes);
+      } catch (error) {
+        console.log(error);
+      }
+        }
+      }
+      else{
         try {
         // const response = await this.axios.get(
         //   this.$root.store.server_domain + "/recipes/random",
@@ -59,27 +96,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      }
-      else{
-        let viewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
-        console.log('Viewed recipes:', viewedRecipes);
-
-        this.recipes = [];
-        // Ensure we have at least 3 viewed recipes
-        if (viewedRecipes.length >= 3) {
-          const recipePromises = [
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 3]),
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 1])
-          ];
-
-          // Wait for all recipe promises to resolve
-          const recipes = await Promise.all(recipePromises);
-          console.log('Fetched recipes:', recipes);
-          this.recipes.push(...recipes);
-        } else {
-          console.log('Not enough viewed recipes to fetch:', viewedRecipes);
-        }
       }
     },
 

@@ -103,7 +103,7 @@
         //from api
         else{
           localRecipe = localRecipes.find(r => r.id === recipeId);
-          const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=b1a72f1616ff413e984ea8dc1377d964`);
+          const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=709325a1a8844ca3ab65110a4d2e4b90`);
           data = await response.json();
 
           this.recipe = {

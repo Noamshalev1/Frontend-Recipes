@@ -87,6 +87,7 @@ export default {
         title
       };
       this.saveToLastViewed();
+
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -96,17 +97,14 @@ export default {
       this.$router.push({ name: "recipeprep", params: { id: this.$route.params.recipeId } });
     },
     saveToLastViewed(){
-    let lastViewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
       
-      // Add the recipe ID if it doesn't already exist in the list
-      if (!lastViewedRecipes.includes(this.recipe.id)) {
-        lastViewedRecipes.push(this.recipe.id);
-        // Limit to the last 10 viewed recipes (optional)
-        if (lastViewedRecipes.length > 10) {
-          lastViewedRecipes.shift();
-        }
-        localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
+      let lastViewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
+      lastViewedRecipes.push(this.$route.params.recipeId);
+          // Limit to the last 10 viewed recipes (optional)
+      if (lastViewedRecipes.length > 10) {
+        lastViewedRecipes.shift();
       }
+      localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
     }
   }
 };
