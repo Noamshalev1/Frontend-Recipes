@@ -1,6 +1,6 @@
 <template>
-  <b-modal v-model="showModal" title="Create New Recipe" @hide="onModalClose">
-    <b-form @submit.prevent="createRecipe">
+  <b-modal v-model="showModal" title="Create New Recipe" @hide="onModalClose" ok-title="Submit" @ok="createRecipe">
+    <b-form>
       <b-form-group label="Recipe Title:">
         <b-form-input v-model="recipe.title" required></b-form-input>
       </b-form-group>
@@ -27,7 +27,7 @@
       <b-form-group label="Instructions:">
         <b-form-textarea v-model="recipe.instructions" rows="5" required></b-form-textarea>
       </b-form-group>
-      <b-button type="submit" variant="primary">Submit</b-button>
+      <!-- <b-button type="submit" variant="primary">Submit</b-button> -->
     </b-form>
   </b-modal>
 </template>
