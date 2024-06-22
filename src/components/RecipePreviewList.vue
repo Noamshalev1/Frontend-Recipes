@@ -121,7 +121,7 @@ export default {
 
   async getrecipe(id) {
     
-    const apiKey = 'b1a72f1616ff413e984ea8dc1377d964';
+    const apiKey = '709325a1a8844ca3ab65110a4d2e4b90';
     const recipeId = id;
     try {
       const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`);

@@ -32,7 +32,8 @@ export default {
         image: '@/assets/myrecipes.png' // Placeholder image
       },
       recipes: [],
-      defaultImage: require('@/assets/myrecipes.png')
+      defaultImage: require('@/assets/myrecipes.png'),
+
     };
   },
   mounted() {
@@ -49,8 +50,10 @@ export default {
       });
     },
     prepareRecipe(id) {
+      console.log(id)
       this.$router.push({ name: 'recipeprep', params: { id: id }, query: { collection:"myrecipes" } })
-    }
+    },
+
   }
 };
 </script>
@@ -81,5 +84,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
+
+
 
 </style>
