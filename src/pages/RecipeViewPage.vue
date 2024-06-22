@@ -55,6 +55,11 @@
               <b-icon icon="play-circle"></b-icon> Prepare
             </b-button>
           </div>
+           <div class="text-center mt-3">
+            <b-button variant="success" size="sm" @click="addToGuestPlan">
+              <b-icon icon="plus-circle"></b-icon> Add to Guest Plan
+            </b-button>
+          </div>
         </div>
       </div>
     </div>
@@ -69,8 +74,9 @@ export default {
     return {
       isFavorite: false,
       recipe: null,
-      apiKey: 'b1a72f1616ff413e984ea8dc1377d964', // Add your Spoonacular API key here
-      
+      apiKey: '709325a1a8844ca3ab65110a4d2e4b90', // Add your Spoonacular API key here
+      guestPlan: [],
+      guests: 1,      
     };
   },
   async created() {
@@ -164,11 +170,28 @@ export default {
     getFavoriteState(recipe) {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
       return favorites.some(r => r.id === recipe.id);
+    },
+    addToGuestPlan() {
+      this.guestPlan.push(this.recipe);
+      this.updateIngredientsForGuests();
+    },
+    updateIngredientsForGuests() {
+      this.recipe.extendedIngredients = this.recipe.extendedIngredients.map(ingredient => {
+        const updatedIngredient = { ...ingredient };
+        updatedIngredient.original = `${ingredient.amount * this.guests} ${ingredient.unit} ${ingredient.name}`;
+        return updatedIngredient;
+      });
     }
   },
   computed: {
     favoriteImage() {
       return this.isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png');
+    },
+    updatedIngredients() {
+      return this.recipe.extendedIngredients.map(ingredient => ({
+        ...ingredient,
+        original: `${ingredient.amount * this.guests} ${ingredient.unit} ${ingredient.name}`
+      }));
     }
   },
   updated() {
@@ -178,6 +201,10 @@ export default {
 </script>
 
 <style scoped>
+.thick-progress .progress-bar {
+  height: 20px; /* Adjust the height to make the progress bar thicker */
+}
+
 .wrapper {
   display: flex;
 }
