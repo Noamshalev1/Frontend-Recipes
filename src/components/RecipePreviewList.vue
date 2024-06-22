@@ -41,11 +41,12 @@ export default {
   },
   methods: {
     async updateRecipes() {
+      this.recipes = [];
       if (this.listType === 'lastviewed'){
         let viewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
         console.log('Viewed recipes:', viewedRecipes);
 
-        this.recipes = [];
+        
         // Ensure we have at least 3 viewed recipes
         if (viewedRecipes.length >= 3) {
           const recipePromises = [
@@ -86,16 +87,32 @@ export default {
         // const response = await this.axios.get(
         //   this.$root.store.server_domain + "/recipes/random",
         // );
+       
+        let usedIndices = new Set();
+        let recipePromises = [];
 
-        const amountToFetch = 3; // Set this to how many recipes you want to fetch
-        const response = mockGetRecipesPreview(amountToFetch);
+        console.log("length", this.recipes.length);
+        let i = 0;
+        
+        for (let i = 0; i < 3; i++)  {
+          const randomIndex = Math.floor(100000 + Math.random() * 900000);
+          console.log("index", randomIndex);
+          if (!usedIndices.has(randomIndex)) {
+          let temp = await this.getrecipe(randomIndex);
 
-
-        console.log(response);
-        const recipes = response.data.recipes;
-        console.log(recipes);
-        this.recipes = [];
+            if (temp !== null) {
+              recipePromises.push(Promise.resolve(temp));
+              successfulRecipes++;
+              usedIndices.add(randomIndex);
+            }
+          }
+        }
+        const recipes = await Promise.all(recipePromises);
+        console.log('Fetched recipes:', recipes);
         this.recipes.push(...recipes);
+        usedIndices.add(randomIndex);
+        console.log("length", this.recipes.length);
+
       } catch (error) {
         console.log(error);
       }
