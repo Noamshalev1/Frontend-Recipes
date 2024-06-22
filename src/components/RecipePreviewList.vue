@@ -58,24 +58,27 @@ export default {
           const recipes = await Promise.all(recipePromises);
           console.log('Fetched recipes:', recipes);
           this.recipes.push(...recipes);
-        } else {
-          try {
-        // const response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/random",
-        // );
+        }
+        else if (viewedRecipes.length >= 2) {
+          const recipePromises = [
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
+          ];
 
-        const amountToFetch = 3; // Set this to how many recipes you want to fetch
-        const response = mockGetRecipesPreview(amountToFetch);
+          // Wait for all recipe promises to resolve
+          const recipes = await Promise.all(recipePromises);
+          console.log('Fetched recipes:', recipes);
+          this.recipes.push(...recipes);
+        }
+        else if (viewedRecipes.length >= 1) {
+          const recipePromises = [
+            this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
+          ];
 
-
-        console.log(response);
-        const recipes = response.data.recipes;
-        console.log(recipes);
-        this.recipes = [];
-        this.recipes.push(...recipes);
-      } catch (error) {
-        console.log(error);
-      }
+          // Wait for all recipe promises to resolve
+          const recipes = await Promise.all(recipePromises);
+          console.log('Fetched recipes:', recipes);
+          this.recipes.push(...recipes);
         }
       }
       else{
