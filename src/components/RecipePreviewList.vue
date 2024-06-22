@@ -92,9 +92,9 @@ export default {
         let recipePromises = [];
 
         console.log("length", this.recipes.length);
-        let i = 0;
-        
-        for (let i = 0; i < 3; i++)  {
+        let successfulRecipes = 0;
+
+        while (successfulRecipes < 3) {
           const randomIndex = Math.floor(100000 + Math.random() * 900000);
           console.log("index", randomIndex);
           if (!usedIndices.has(randomIndex)) {
