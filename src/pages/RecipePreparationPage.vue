@@ -5,6 +5,11 @@
           <h1 class="display-4">{{ recipe.title }}</h1>
           <img :src="recipe.image|| defaultImage" alt="Recipe Image" class="img-fluid rounded recipe-image" />
         </div>
+        <div v-if="recipe.instructions && recipe.instructions.length > 0" class="text-center mt-3">
+            <h5>Progress label</h5>
+            <b-progress :value="progress" :max="max_len" :precision="2"></b-progress>
+            <span>{{ progress }}/{{max_len}}</span>
+        </div>
         <div class="row">
           <div class="col-md-6 mb-4">
             <h2 class="h4">Ingredients</h2>
@@ -39,7 +44,9 @@
         recipe: null,
         multipliedIngredients: [],
         stepCompleted: [],
-        defaultImage: require('@/assets/myrecipes.png')
+        defaultImage: require('@/assets/myrecipes.png'),
+        progress: 0,
+        max_len: 1
       };
     },
     methods: {
@@ -87,6 +94,7 @@
             amount: ingredient.amount.metric.value,
             unit: ingredient.amount.metric.unit,
           });
+
         });
           
           this.recipe = {
@@ -98,12 +106,16 @@
             : [] // Default to an empty array if instructions are undefined
         };
           this.multipliedIngredients = [...this.recipe.ingredients];
+          if (this.recipe.instructions) {
+            this.max_len = this.recipe.instructions.length;
+          }
+          
         }
 
         //from api
         else{
           localRecipe = localRecipes.find(r => r.id === recipeId);
-          const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=b1a72f1616ff413e984ea8dc1377d964`);
+          const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=709325a1a8844ca3ab65110a4d2e4b90`);
           data = await response.json();
 
           this.recipe = {
@@ -120,6 +132,9 @@
         };
         this.multipliedIngredients = [...this.recipe.ingredients];
         this.loadProgress();
+        if (this.recipe.instructions) {
+          this.max_len = this.recipe.instructions.length;
+        }
         } 
       },
       multiplyIngredients() {
@@ -127,9 +142,12 @@
           ...ingredient,
           amount: ingredient.amount * 2
         }));
+
+        this.max_len = this.recipe.instructions.length;
       },
       saveProgress() {
         localStorage.setItem(`recipeProgress-${this.recipe.id}`, JSON.stringify(this.stepCompleted));
+        this.updateProgress();
       },
       loadProgress() {
         const savedProgress = localStorage.getItem(`recipeProgress-${this.recipe.id}`);
@@ -138,15 +156,23 @@
         } else {
           this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
         }
+        this.updateProgress();
       },
       logout() {
         // Implement the logout logic and clear the progress
         localStorage.removeItem(`recipeProgress-${this.recipe.id}`);
         this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
-      }
+      },
+      updateProgress() {
+        const completedSteps = this.stepCompleted.filter(step => step).length;
+        if (this.max_len != 0) {
+          this.progress = (completedSteps / this.max_len) * this.max_len;
+        }
+      },
     },
     mounted() {
       this.fetchRecipe();
+      this.updateProgress();
     }
   };
   </script>
@@ -157,5 +183,6 @@
     height: 300px; /* Set a specific height */
     object-fit: cover; /* Ensures the image covers the specified dimensions while maintaining aspect ratio */
   }
+ 
   </style>
   

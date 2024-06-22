@@ -133,7 +133,7 @@ export default {
   });
     },
     performSearch() {
-      const apiKey = 'b1a72f1616ff413e984ea8dc1377d964'; // Replace with your Spoonacular API key
+      const apiKey = '709325a1a8844ca3ab65110a4d2e4b90'; // Replace with your Spoonacular API key
       const baseURL = 'https://api.spoonacular.com/recipes/complexSearch';
 
       let params = {

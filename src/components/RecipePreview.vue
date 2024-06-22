@@ -51,7 +51,7 @@ export default {
     return {
       image_load: true,
       isFavorite: this.getFavoriteState(this.recipe),
-      isViewed: this.checkIfViewed(this.recipe.id)
+      isViewed: this.checkIfViewed(this.recipe.id),
     };
   },
   computed: {
@@ -98,7 +98,7 @@ export default {
     getFavoriteState(recipe) {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
       return favorites.some(r => r.id === recipe.id);
-    }
+    },
   },
   created() {
     this.isFavorite = this.getFavoriteState(this.recipe);
