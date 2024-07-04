@@ -76,6 +76,7 @@
 <script>
 import RecipePreview from "../../src/components/RecipePreview.vue";
 import axios from 'axios';
+import searchRecipe from "../assigment2-3-318467941_319041208/routes/utils/recipes_utils.js"
 
 export default {
   components: {
@@ -133,14 +134,14 @@ export default {
   });
     },
     performSearch() {
-      const apiKey = '709325a1a8844ca3ab65110a4d2e4b90'; // Replace with your Spoonacular API key
-      const baseURL = 'https://api.spoonacular.com/recipes/complexSearch';
+      // const apiKey = '709325a1a8844ca3ab65110a4d2e4b90'; // Replace with your Spoonacular API key
+      // const baseURL = 'https://api.spoonacular.com/recipes/complexSearch';
 
       let params = {
         query: this.searchQuery || '', // Allow search with filters even if query is empty
         number: this.resultsCount,
         sort: this.sortOption,
-        apiKey: apiKey,
+        // apiKey: apiKey,
         cuisine: this.selectedCuisine,
         diet: this.selectedDiet,
         intolerances: this.selectedIntolerances.join(','),
@@ -153,8 +154,8 @@ export default {
           delete params[key];
         }
       });
-
-      axios.get(baseURL, { params })
+      
+      await searchRecipe({params})
         .then(response => {
           this.recipes = response.data.results;
         })
