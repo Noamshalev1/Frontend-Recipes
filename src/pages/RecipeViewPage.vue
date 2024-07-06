@@ -144,32 +144,49 @@ export default {
       }
       localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
     },
-    toggleFavorite() {
+    async toggleFavorite() {
       this.isFavorite = !this.isFavorite;
-      if (this.isFavorite) {
-        this.addToFavorites();
-      } else {
-        this.removeFromFavorites();
+      const username = this.$root.store.login;
+      try {
+        if (this.isFavorite) {
+          await axios.post('http://localhost/user/favorites', { recipeId: this.recipe.id, username });
+          this.addToFavorites();
+        } else {
+          await axios.delete('http://localhost/user/favorites', { data: { recipeId: this.recipe.id, username } });
+          this.removeFromFavorites();
+        }
+      } catch (error) {
+        console.error("Error updating favorite status:", error.response ? error.response.status : error.message);
+        // Optionally revert the state if the request fails
+        this.isFavorite = !this.isFavorite;
       }
     },
-    addToFavorites() {
-      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      if (!favorites.some(r => r.id === this.recipe.id)) {
-        favorites.push(this.recipe);
-        localStorage.setItem('favorites', JSON.stringify(favorites));
+    async addToFavorites() {
+      const username = this.$root.store.login;
+      try {
+        await axios.post('http://localhost/user/favorites', { recipeId: this.recipe.id, username });
+      } catch (error) {
+        console.error("Error adding to favorites:", error.response ? error.response.status : error.message);
       }
     },
-    removeFromFavorites() {
-      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      let index = favorites.findIndex(r => r.id === this.recipe.id);
-      if (index !== -1) {
-        favorites.splice(index, 1);
-        localStorage.setItem('favorites', JSON.stringify(favorites));
+    async removeFromFavorites() {
+      const username = this.$root.store.login;
+      try {
+        await axios.delete('http://localhost/user/favorites', { data: { recipeId: this.recipe.id, username } });
+      } catch (error) {
+        console.error("Error removing from favorites:", error.response ? error.response.status : error.message);
       }
     },
-    getFavoriteState(recipe) {
-      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      return favorites.some(r => r.id === recipe.id);
+    async getFavoriteState(recipe) {
+      const username = this.$root.store.login;
+      try {
+        const response = await axios.get(`http://localhost/user/favorites?username=${username}`);
+        const favorites = response.data;
+        return favorites.some(r => r.id === recipe.id);
+      } catch (error) {
+        console.error("Error fetching favorite state:", error.response ? error.response.status : error.message);
+        return false;
+      }
     },
     addToGuestPlan() {
       this.guestPlan.push(this.recipe);

@@ -31,9 +31,14 @@ export default {
     this.loadFavorites();
   },
   methods: {
-    loadFavorites() {
-      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      this.favorites = favorites;
+    async loadFavorites() {
+      const username = this.$root.store.login;
+      try {
+        const response = await axios.get(`http://localhost/user/favorites?username=${username}`);
+        this.favorites = response.data;
+      } catch (error) {
+        console.error("Error loading favorite recipes:", error.response ? error.response.status : error.message);
+      }
     }
   }
 };
