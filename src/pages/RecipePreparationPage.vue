@@ -37,6 +37,7 @@
   
   <script>
   import familyrecipes from "../assets/mocks/familyrecipes.json";
+  import axios from "axios";
   export default {
     name: "recipeprep",
     data() {
@@ -114,9 +115,15 @@
 
         //from api
         else{
-          localRecipe = localRecipes.find(r => r.id === recipeId);
-          const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=709325a1a8844ca3ab65110a4d2e4b90`);
-          data = await response.json();
+          let response;
+          try {
+            response = await axios.get(`http://localhost/recipes/${recipeId}`);
+          } catch (error) {
+            console.error("Error fetching recipe from API:", error.response ? error.response.status : error.message);
+            this.$router.replace("/NotFound");
+            return;
+          }
+          data = response.data;
 
           this.recipe = {
           id: data.id,
