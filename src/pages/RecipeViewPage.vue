@@ -74,7 +74,7 @@ export default {
     return {
       isFavorite: false,
       recipe: null,
-      apiKey: '709325a1a8844ca3ab65110a4d2e4b90', // Add your Spoonacular API key here
+      // apiKey: '709325a1a8844ca3ab65110a4d2e4b90', // Add your Spoonacular API key here
       guestPlan: [],
       guests: 1,      
     };
@@ -86,7 +86,7 @@ export default {
       
       // Fetch the recipe data from the API
       try {
-        response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${this.apiKey}`);
+        response = await axios.get(`http://localhost/recipes/${recipeId}`);
       } catch (error) {
         console.error("Error fetching recipe from API:", error.response ? error.response.status : error.message);
         this.$router.replace("/NotFound");
@@ -94,18 +94,18 @@ export default {
       }
 
       const {
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title,
-        vegan,
-        vegetarian,
-        glutenFree,
-        id,
-      } = response.data;
-      console.log(response)
+            analyzedInstructions = [],
+            extendedIngredients,
+            aggregateLikes,
+            readyInMinutes,
+            image,
+            title,
+            vegan,
+            vegetarian,
+            glutenFree,
+            id,
+        } = response.data;
+        console.log(response);
 
       const _instructions = analyzedInstructions
         .map(instruction => instruction.steps)

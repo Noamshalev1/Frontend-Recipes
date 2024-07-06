@@ -76,7 +76,6 @@
 <script>
 import RecipePreview from "../../src/components/RecipePreview.vue";
 import axios from 'axios';
-import searchRecipe from "../assigment2-3-318467941_319041208/routes/utils/recipes_utils.js"
 
 export default {
   components: {
@@ -133,10 +132,10 @@ export default {
         return 0;
   });
     },
-    performSearch() {
-      // const apiKey = '709325a1a8844ca3ab65110a4d2e4b90'; // Replace with your Spoonacular API key
-      // const baseURL = 'https://api.spoonacular.com/recipes/complexSearch';
-
+  
+    async performSearch() {
+      const baseURL = 'http://localhost/recipes/search';//change to server url at the end !!<-----------------
+      console.log('Searching for:', this.searchQuery);
       let params = {
         query: this.searchQuery || '', // Allow search with filters even if query is empty
         number: this.resultsCount,
@@ -154,15 +153,13 @@ export default {
           delete params[key];
         }
       });
-      
-      await searchRecipe({params})
-        .then(response => {
-          this.recipes = response.data.results;
-        })
-        .catch(error => {
-          console.error('Error fetching recipes:', error);
-        });
 
+      try {
+      const response = await this.axios.post(baseURL, params);
+      this.recipes = response.data.results;
+    } catch (error) {
+      console.error('Error fetching recipes here:', error);
+    }
         this.saveLastSearch(this.searchQuery);
     },
     saveLastSearch() {

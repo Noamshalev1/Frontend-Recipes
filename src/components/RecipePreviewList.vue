@@ -121,10 +121,9 @@ export default {
 
   async getrecipe(id) {
     
-    const apiKey = '709325a1a8844ca3ab65110a4d2e4b90';
     const recipeId = id;
     try {
-      const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`);
+      const response = await axios.get(`http://localhost/recipes/${recipeId}`);
       console.log('Recipe API response:', response);
 
       const {
@@ -133,7 +132,10 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
+        vegan,
+        vegetarian,
+        glutenFree,
       } = response.data;
       const _instructions = analyzedInstructions
         .map(instruction => instruction.steps)
@@ -146,6 +148,9 @@ export default {
         readyInMinutes,
         image,
         title,
+        vegan,
+        vegetarian,
+        glutenFree,
         id
       };
     } catch (error) {
