@@ -62,6 +62,7 @@ export default {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
       localStorage.removeItem('lastSearch');
+      localStorage.removeItem('favorites');
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });

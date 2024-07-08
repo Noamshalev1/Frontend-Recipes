@@ -60,14 +60,23 @@ export default {
     }
   },
   methods: {
-    toggleFavorite() {
-      this.isFavorite = !this.isFavorite;
+    async toggleFavorite() {
+    this.isFavorite = !this.isFavorite;
+    const username = this.$root.store.login;
+    try {
       if (this.isFavorite) {
+        await axios.post('http://localhost/user/favorites', { recipeId: this.recipe.id, username });
         this.addToFavorites();
       } else {
+        await axios.delete('http://localhost/user/favorites', { data: { recipeId: this.recipe.id, username } });
         this.removeFromFavorites();
       }
-    },
+    } catch (error) {
+      console.error("Error updating favorite status:", error.response ? error.response.status : error.message);
+      // Optionally revert the state if the request fails
+      this.isFavorite = !this.isFavorite;
+    }
+  },
     addToFavorites() {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
       if (!favorites.some(r => r.id === this.recipe.id)) {
@@ -99,8 +108,19 @@ export default {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
       return favorites.some(r => r.id === recipe.id);
     },
+    async loadFavorites() {
+    const username = this.$root.store.login;
+    try {
+      const response = await axios.get(`http://localhost/user/favorites?username=${username}`);
+      const favorites = response.data;
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    } catch (error) {
+      console.error("Error loading favorite recipes:", error.response ? error.response.status : error.message);
+    }
+  }
   },
   created() {
+    this.loadFavorites
     this.isFavorite = this.getFavoriteState(this.recipe);
     this.isViewed = this.checkIfViewed(this.recipe.id);
   },
