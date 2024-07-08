@@ -18,8 +18,15 @@ export default {
   },
   data() {
     return {
-      familyrecipes
+      recipes: []
     };
+  },
+  methods:{
+    async getRecipes(){
+      this.axios.defaults.withCredentials = true;
+      const response = await this.axios.get(`http://localhost/users/familyrecipes`);
+      this.recipes = response.data;
+    }
   }
 };
 </script>

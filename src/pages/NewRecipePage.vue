@@ -52,13 +52,13 @@ export default {
     };
   },
   methods: {
-    addIngredient() {
+    async addIngredient() {
       this.recipe.ingredients.push({ name: '', amount: null, unit: 'tsp' });
     },
-    removeIngredient(index) {
+    async removeIngredient(index) {
       this.recipe.ingredients.splice(index, 1);
     },
-    createRecipe() {
+    async createRecipe() {
       this.recipe.id = Date.now(); // Generate a unique ID
       let storedRecipes = localStorage.getItem('myRecipes');
       let recipes = storedRecipes ? JSON.parse(storedRecipes) : [];
@@ -101,6 +101,12 @@ export default {
         ]
       };
 
+      try{
+        this.axios.defaults.withCredentials = true;
+        await this.axios.post('http://localhost/users/myrecipes', {recipe: this.newRecipe});
+      }catch (error){
+        console.error("Error creating my recipe:", error.response ? error.response.status : error.message);
+      }     
       recipes.push(newRecipe);
       localStorage.setItem('myRecipes', JSON.stringify(recipes));
       this.$emit('recipe-saved');

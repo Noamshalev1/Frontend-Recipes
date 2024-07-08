@@ -28,13 +28,15 @@ export default {
     };
   },
   mounted() {
-    this.loadFavorites();
+    if (this.$root.store.username){
+      this.loadFavorites();
+    }
   },
   methods: {
     async loadFavorites() {
-      const username = this.$root.store.login;
       try {
-        const response = await axios.get(`http://localhost/user/favorites?username=${username}`);
+        this.axios.defaults.withCredentials = true;
+        const response = await this.axios.get(`http://localhost/users/favorites`);
         this.favorites = response.data;
       } catch (error) {
         console.error("Error loading favorite recipes:", error.response ? error.response.status : error.message);

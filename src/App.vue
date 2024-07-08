@@ -18,7 +18,7 @@
         <b-dropdown-item href="#"><router-link :to="{ name: 'myrecipes' }">My Recipes</router-link></b-dropdown-item>
         <b-dropdown-item href="#"><router-link :to="{ name: 'familyrecipes' }">Family Recipes</router-link></b-dropdown-item>
         </b-dropdown>
-        <h1 class="user-greeting">Hello, {{ this.firstName }}</h1>|
+        <h1 class="user-greeting">Hello, {{ this.$root.store.firstname }}</h1>|
         <button @click="Logout">Logout</button>
       </span>
     </div>

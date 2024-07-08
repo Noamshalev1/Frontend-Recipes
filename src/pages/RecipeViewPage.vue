@@ -17,7 +17,7 @@
             </div>
             <div class="btn-group-toggle">
             <label class="btn btn-secondary active" style="background-color: white;">
-              <input
+              <input v-if="this.$root.store.username"
                 type="checkbox"
                 v-model="isFavorite"
                 @change="toggleFavorite"
@@ -74,7 +74,6 @@ export default {
     return {
       isFavorite: false,
       recipe: null,
-      // apiKey: '709325a1a8844ca3ab65110a4d2e4b90', // Add your Spoonacular API key here
       guestPlan: [],
       guests: 1,      
     };
@@ -146,14 +145,13 @@ export default {
     },
     async toggleFavorite() {
       this.isFavorite = !this.isFavorite;
-      const username = this.$root.store.login;
       try {
-        if (this.isFavorite) {
-          await axios.post('http://localhost/user/favorites', { recipeId: this.recipe.id, username });
-          this.addToFavorites();
+        if (!this.isFavorite) {
+          this.axios.defaults.withCredentials = true;
+          await this.axios.post('http://localhost/users/favorites', { recipeId: this.recipe.id }, {username: this.$root.store.username});
         } else {
-          await axios.delete('http://localhost/user/favorites', { data: { recipeId: this.recipe.id, username } });
-          this.removeFromFavorites();
+          this.axios.defaults.withCredentials = true;
+          await this.axios.delete('http://localhost/users/favorites', { data: { recipeId: this.recipe.id } });
         }
       } catch (error) {
         console.error("Error updating favorite status:", error.response ? error.response.status : error.message);
@@ -161,26 +159,10 @@ export default {
         this.isFavorite = !this.isFavorite;
       }
     },
-    async addToFavorites() {
-      const username = this.$root.store.login;
-      try {
-        await axios.post('http://localhost/user/favorites', { recipeId: this.recipe.id, username });
-      } catch (error) {
-        console.error("Error adding to favorites:", error.response ? error.response.status : error.message);
-      }
-    },
-    async removeFromFavorites() {
-      const username = this.$root.store.login;
-      try {
-        await axios.delete('http://localhost/user/favorites', { data: { recipeId: this.recipe.id, username } });
-      } catch (error) {
-        console.error("Error removing from favorites:", error.response ? error.response.status : error.message);
-      }
-    },
     async getFavoriteState(recipe) {
-      const username = this.$root.store.login;
       try {
-        const response = await axios.get(`http://localhost/user/favorites?username=${username}`);
+        this.axios.defaults.withCredentials = true;
+        const response = await this.axios.get(`http://localhost/users/favorites`);
         const favorites = response.data;
         return favorites.some(r => r.id === recipe.id);
       } catch (error) {
