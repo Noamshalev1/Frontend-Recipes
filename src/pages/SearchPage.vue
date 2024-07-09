@@ -157,7 +157,7 @@ export default {
       });
 
       try {
-      const response = await this.axios.post(baseURL, params, params);
+      const response = await this.axios.post(baseURL, params);
       this.recipes = response.data.results;
     } catch (error) {
       console.error('Error fetching recipes here:', error);
