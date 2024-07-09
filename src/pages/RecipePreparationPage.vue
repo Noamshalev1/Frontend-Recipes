@@ -152,18 +152,39 @@
 
         this.max_len = this.recipe.instructions.length;
       },
-      saveProgress() {
-        localStorage.setItem(`recipeProgress-${this.recipe.id}`, JSON.stringify(this.stepCompleted));
-        this.updateProgress();
-      },
-      loadProgress() {
-        const savedProgress = localStorage.getItem(`recipeProgress-${this.recipe.id}`);
-        if (savedProgress) {
-          this.stepCompleted = JSON.parse(savedProgress);
-        } else {
-          this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
+      /**
+       * Save the progress of the recipe to the local storage
+       */
+      async saveProgress() {
+        // localStorage.setItem(`recipeProgress-${this.recipe.id}`, JSON.stringify(this.stepCompleted));
+        try{
+          this.axios.defaults.withCredentials = true;
+          await this.axios.post(`http://localhost/recipes/${this.recipe.id}/progress`, {progress: JSON.stringify(this.stepCompleted)} );
+          console.log('Recipe progress saved successfully.');
+        } catch (error) {
+          onsole.error('Error saving recipe progress:', error);
         }
         this.updateProgress();
+      },
+      /**
+       * Load the progress of the recipe from the local storage
+       */
+      async loadProgress() {
+        // const savedProgress = localStorage.getItem(`recipeProgress-${this.recipe.id}`);
+        try{
+          this.axios.defaults.withCredentials = true;
+          const response = await this.axios.get(`http://localhost/recipes/${this.recipe.id}/progress`);
+          const savedProgress = response.data || null;
+          if (savedProgress) {
+            this.stepCompleted = JSON.parse(savedProgress);
+          } else {
+            this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
+          }
+        } catch (error) {
+        console.error('Error fetching recipe progress:', error);
+        this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
+        }
+          this.updateProgress();        
       },
       logout() {
         // Implement the logout logic and clear the progress
