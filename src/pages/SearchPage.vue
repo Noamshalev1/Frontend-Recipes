@@ -132,7 +132,9 @@ export default {
         return 0;
   });
     },
-  
+  /**
+   * Perform a search with the current search query and filters.
+   */
     async performSearch() {
       const baseURL = 'http://localhost/recipes/search';//change to server url at the end !!<-----------------
       console.log('Searching for:', this.searchQuery);
@@ -155,21 +157,27 @@ export default {
       });
 
       try {
-      const response = await this.axios.post(baseURL, params);
+      const response = await this.axios.post(baseURL, params, params);
       this.recipes = response.data.results;
     } catch (error) {
       console.error('Error fetching recipes here:', error);
     }
-        this.saveLastSearch(this.searchQuery);
     },
-    saveLastSearch() {
-      localStorage.setItem('lastSearch', this.searchQuery);
-    },
-    loadLastSearch() {
-      const lastSearch = localStorage.getItem('lastSearch');
+    /**
+     * Load the last search query from the server and perform the search.
+     */
+    async loadLastSearch() {
+      try {
+        this.axios.defaults.withCredentials = true;
+        const response = await this.axios.get(baseURL);
+        const lastSearch = response.data.lastSearch;
       if (lastSearch) {
         this.searchQuery = lastSearch;
         this.performSearch();
+        console.log('Last search loaded successfully.');
+      }
+      } catch (error) {
+        console.error('Error loading last search:', error);
       }
     },
     updateResultsCount(count) {
@@ -193,7 +201,7 @@ export default {
       this.selectedDiet = diet;
       this.performSearch();
     }
-  },
+  }
 };
 </script>
 
