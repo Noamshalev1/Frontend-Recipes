@@ -43,43 +43,64 @@ export default {
     async updateRecipes() {
       this.recipes = [];
       if (this.listType === 'lastviewed'){
-        let viewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
-        console.log('Viewed recipes:', viewedRecipes);
+        // local
+        // let viewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
+        // console.log('Viewed recipes:', viewedRecipes);
 
         
-        // Ensure we have at least 3 viewed recipes
-        if (viewedRecipes.length >= 3) {
-          const recipePromises = [
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 3])
-          ];
+        // // Ensure we have at least 3 viewed recipes
+        // if (viewedRecipes.length >= 3) {
+        //   const recipePromises = [
+        //     this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
+        //     this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
+        //     this.getrecipe(viewedRecipes[viewedRecipes.length - 3])
+        //   ];
+
+        //   // Wait for all recipe promises to resolve
+        //   const recipes = await Promise.all(recipePromises);
+        //   console.log('Fetched recipes:', recipes);
+        //   this.recipes.push(...recipes);
+        // }
+        // else if (viewedRecipes.length >= 2) {
+        //   const recipePromises = [
+        //     this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
+        //     this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
+        //   ];
+
+        //   // Wait for all recipe promises to resolve
+        //   const recipes = await Promise.all(recipePromises);
+        //   console.log('Fetched recipes:', recipes);
+        //   this.recipes.push(...recipes);
+        // }
+        // else if (viewedRecipes.length >= 1) {
+        //   const recipePromises = [
+        //     this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
+        //   ];
+
+        //   // Wait for all recipe promises to resolve
+        //   const recipes = await Promise.all(recipePromises);
+        //   console.log('Fetched recipes:', recipes);
+        //   this.recipes.push(...recipes);
+        // }
+
+        // remote
+        try {
+        this.axios.defaults.withCredentials = true;
+        const response = await this.axios.get('http://localhost/recipes/lastviewed');
+        const viewedRecipes = response.data.lastviewed || [];
+        // Ensure we have at least 3 viewed recipe
+        if (viewedRecipes.length > 0) {
+          const recipePromises = viewedRecipes
+            .slice(-3) // Get the last three viewed recipes
+            .reverse() // Reverse to maintain order (latest viewed first)
+            .map(id => this.getrecipe(id)); // Fetch each recipe
 
           // Wait for all recipe promises to resolve
           const recipes = await Promise.all(recipePromises);
           console.log('Fetched recipes:', recipes);
           this.recipes.push(...recipes);
-        }
-        else if (viewedRecipes.length >= 2) {
-          const recipePromises = [
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 2]),
-          ];
-
-          // Wait for all recipe promises to resolve
-          const recipes = await Promise.all(recipePromises);
-          console.log('Fetched recipes:', recipes);
-          this.recipes.push(...recipes);
-        }
-        else if (viewedRecipes.length >= 1) {
-          const recipePromises = [
-            this.getrecipe(viewedRecipes[viewedRecipes.length - 1]),
-          ];
-
-          // Wait for all recipe promises to resolve
-          const recipes = await Promise.all(recipePromises);
-          console.log('Fetched recipes:', recipes);
-          this.recipes.push(...recipes);
+        } }catch (error) {
+        console.error('Error fetching viewed recipes:', error);
         }
       }
       else{
