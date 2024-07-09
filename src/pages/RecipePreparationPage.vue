@@ -186,11 +186,7 @@
         }
           this.updateProgress();        
       },
-      logout() {
-        // Implement the logout logic and clear the progress
-        localStorage.removeItem(`recipeProgress-${this.recipe.id}`);
-        this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
-      },
+      
       updateProgress() {
         const completedSteps = this.stepCompleted.filter(step => step).length;
         if (this.max_len != 0) {
