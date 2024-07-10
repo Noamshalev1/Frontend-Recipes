@@ -35,6 +35,7 @@ export default {
   methods: {
     async loadFavorites() {
       try {
+        console.log("Load from favorite page")
         this.axios.defaults.withCredentials = true;
         const response = await this.axios.get(`http://localhost/users/favorites`);
         this.favorites = response.data;

@@ -4,7 +4,7 @@
       {{ title }}
       <slot></slot>
     </h3>
-    <b-row>
+    <b-row v-if="recipes && recipes.length !== 0">
       <b-col v-for="r in recipes" :key="r.id">
         <RecipePreview class="recipePreview" :recipe="r" />
       </b-col>
@@ -86,15 +86,16 @@ export default {
         // remote
         try {
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get('http://localhost/recipes/lastviewed');
-        const viewedRecipes = response.data.lastviewed || [];
+        const response = await this.axios.get('http://localhost/users/lastviewed');
+        const viewedRecipes = response.data || [];
         // Ensure we have at least 3 viewed recipe
-        if (viewedRecipes.length > 0) {
+        console.log("Testtttt " + JSON.stringify(viewedRecipes))
+        if (viewedRecipes.length !== 0) {
           const recipePromises = viewedRecipes
             .slice(-3) // Get the last three viewed recipes
             .reverse() // Reverse to maintain order (latest viewed first)
-            .map(id => this.getrecipe(id)); // Fetch each recipe
-
+            .map(recipe  => this.getrecipe(recipe.recipeId)); // Fetch each recipe
+            console.log("Viewed")
           // Wait for all recipe promises to resolve
           const recipes = await Promise.all(recipePromises);
           console.log('Fetched recipes:', recipes);
@@ -120,7 +121,7 @@ export default {
           console.log("index", randomIndex);
           if (!usedIndices.has(randomIndex)) {
           let temp = await this.getrecipe(randomIndex);
-
+            console.log(temp);
             if (temp !== null) {
               recipePromises.push(Promise.resolve(temp));
               successfulRecipes++;
@@ -175,7 +176,7 @@ export default {
         id
       };
     } catch (error) {
-      console.error('Error fetching recipe from API:', error.response ? error.response.status : error.message);
+      console.log('Error fetching recipe from API:', error.response ? error.response.status : error.message);
       return null; // Return null to handle the error gracefully
     }
   }

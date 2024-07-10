@@ -169,7 +169,7 @@ export default {
     async loadLastSearch() {
       try {
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get(baseURL);
+        const response = await this.axios.get('http://localhost/users/search');
         const lastSearch = response.data.lastSearch;
       if (lastSearch) {
         this.searchQuery = lastSearch;

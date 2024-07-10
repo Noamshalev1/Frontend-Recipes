@@ -123,7 +123,7 @@ export default {
         id
       };
 
-      this.saveToLastViewed();
+      //this.saveToLastViewed();
       this.isFavorite= this.getFavoriteState(this.recipe);
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -133,16 +133,16 @@ export default {
     goToPreparationPage() {
       this.$router.push({ name: "recipeprep", params: { id: this.$route.params.recipeId } });
     },
-    saveToLastViewed(){
+    // saveToLastViewed(){
       
-      let lastViewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
-      lastViewedRecipes.push(this.$route.params.recipeId);
-          // Limit to the last 10 viewed recipes (optional)
-      if (lastViewedRecipes.length > 10) {
-        lastViewedRecipes.shift();
-      }
-      localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
-    },
+    //   let lastViewedRecipes = JSON.parse(localStorage.getItem('lastviewed')) || [];
+    //   lastViewedRecipes.push(this.$route.params.recipeId);
+    //       // Limit to the last 10 viewed recipes (optional)
+    //   if (lastViewedRecipes.length > 10) {
+    //     lastViewedRecipes.shift();
+    //   }
+    //   localStorage.setItem('lastviewed', JSON.stringify(lastViewedRecipes));
+    // },
     async toggleFavorite() {
       this.isFavorite = !this.isFavorite;
       try {
@@ -161,6 +161,7 @@ export default {
     },
     async getFavoriteState(recipe) {
       try {
+        console.log("Load favorite to RecipeViewPage");
         this.axios.defaults.withCredentials = true;
         const response = await this.axios.get(`http://localhost/users/favorites`);
         const favorites = response.data;

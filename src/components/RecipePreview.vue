@@ -100,17 +100,25 @@ export default {
         localStorage.setItem('favorites', JSON.stringify(favorites));
       }
     },
-    markAsViewed() {
-      let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
-      if (!viewedRecipes.includes(this.recipe.id)) {
-        viewedRecipes.push(this.recipe.id);
-        localStorage.setItem('viewedRecipes', JSON.stringify(viewedRecipes));
-        this.isViewed = true; // Update the state to show the viewed icon
+    async markAsViewed() {
+      try {
+        this.axios.defaults.withCredentials = true;
+        await this.axios.post('http://localhost/users/lastviewed', {recipeId: this.recipe.id});
+        this.isViewed = true;
+      }catch(error){
+        console.error("Error updating lastviewed status:", error.response ? error.response.status : error.message);
       }
     },
-    checkIfViewed(recipeId) {
-      let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
-      return viewedRecipes.includes(recipeId);
+    async checkIfViewed(recipeId) {
+      this.axios.defaults.withCredentials = true;
+      const response = await this.axios.get('http://localhost/users/lastviewed');
+      const viewedRecipes = response.data
+      for (let id of viewedRecipes){
+        if (id === recipeId){
+          return true;
+        }
+      }
+      return false;
     },
     getFavoriteState(recipe) {
       let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
