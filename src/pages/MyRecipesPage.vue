@@ -40,9 +40,19 @@ export default {
     this.loadRecipes();
   },
   methods: {
-    loadRecipes() {
-      let storedRecipes = localStorage.getItem('myRecipes');
-      this.recipes = storedRecipes ? JSON.parse(storedRecipes) : [];
+    async loadRecipes() {
+      this.axios.defaults.withCredentials = true;
+      try{
+        const response = await this.axios.get(`http://localhost/users/myrecipes`);
+        console.log(response.data);
+        this.recipes = response.data || [];
+
+      }catch(error){
+        console.log("error")
+
+      }
+      // let storedRecipes = localStorage.getItem('myRecipes');
+      // this.recipes = storedRecipes ? JSON.parse(storedRecipes) : [];
       this.recipes.forEach(recipe => {
         if (!recipe.image) {
           recipe.image = this.defaultImage;

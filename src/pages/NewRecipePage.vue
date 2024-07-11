@@ -100,6 +100,7 @@ export default {
           }
         ]
       };
+      console.log(newRecipe);
 
       try{
         this.axios.defaults.withCredentials = true;

@@ -159,7 +159,7 @@
         // localStorage.setItem(`recipeProgress-${this.recipe.id}`, JSON.stringify(this.stepCompleted));
         try{
           this.axios.defaults.withCredentials = true;
-          await this.axios.post(`http://localhost/recipes/${this.recipe.id}/progress`, {progress: JSON.stringify(this.stepCompleted)} );
+          await this.axios.post(`http://localhost/users/${this.recipe.id}/progress`, {progress: JSON.stringify(this.stepCompleted)} );
           console.log('Recipe progress saved successfully.');
         } catch (error) {
           onsole.error('Error saving recipe progress:', error);
@@ -173,10 +173,11 @@
         // const savedProgress = localStorage.getItem(`recipeProgress-${this.recipe.id}`);
         try{
           this.axios.defaults.withCredentials = true;
-          const response = await this.axios.get(`http://localhost/recipes/${this.recipe.id}/progress`);
-          const savedProgress = response.data || null;
+          const response = await this.axios.get(`http://localhost/users/${this.recipe.id}/progress`);
+          const savedProgress = response.data[0].progress || null;
+          console.log(response.data[0].progress)
           if (savedProgress) {
-            this.stepCompleted = JSON.parse(savedProgress);
+            this.stepCompleted = savedProgress;
           } else {
             this.stepCompleted = Array(this.recipe.instructions.length).fill(false);
           }
