@@ -21,16 +21,20 @@
         <span v-if="recipe.glutenFree"><img src="../assets/glutenfree.png" class="glutenfree" /></span>
         <div class="btn-group-toggle">
           <label class="btn btn-secondary active" style="background-color: white;">
+            <!-- Hidden Checkbox -->
             <input
               type="checkbox"
               v-model="isFavorite"
               @change="toggleFavorite"
-            >
+              style="display: none;"
+            />
+            <!-- Favorite icon that toggles the checkbox and favorite status -->
             <img
               :src="favoriteImage"
               alt="Favorite"
               class="favorite-icon"
-            >
+              @click="toggleFavorite"
+            />
           </label>
         </div>
       </div>
@@ -51,33 +55,35 @@ export default {
   data() {
     return {
       image_load: true,
-      isFavorite: this.getFavoriteState(this.recipe),
-      isViewed: this.checkIfViewed(this.recipe.id),
+      isFavorite: false, //this.getFavoriteState(this.recipe),
+      isViewed: false,
     };
   },
   computed: {
     favoriteImage() {
       console.log(this.isFavorite)
       return this.isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png');
-    }
+    },
+    isViewed() {
+      // Ensure this returns a boolean
+      return this.isViewed;
+    },
   },
   methods: {
     // favoriteImage() {
     //   return this.isFavorite ? require('@/assets/favorite.png') : require('@/assets/notfavorite.png');
     // },
     async toggleFavorite() {
-      console.log("toggle "+this.isFavorite);
       this.isFavorite = !this.isFavorite;
-      console.log("toggle "+this.isFavorite);
       try {
-        if (!this.isFavorite) {
+        if (this.isFavorite) {
           this.axios.defaults.withCredentials = true;
           await this.axios.post('http://localhost/users/favorites', { recipeId: this.recipe.id});
-          this.addToFavorites();
+          //this.addToFavorites();
         } else {
           this.axios.defaults.withCredentials = true;
-          await this.axios.delete('http://localhost/users/favorites', { data: { recipeId: this.recipe.id} });
-          this.removeFromFavorites();
+          await this.axios.delete(`http://localhost/recipes/${recipeId}`);
+          //this.removeFromFavorites();
         }
       } catch (error) {
         console.error("Error updating favorite status:", error.response ? error.response.status : error.message);
@@ -113,20 +119,29 @@ export default {
       this.axios.defaults.withCredentials = true;
       const response = await this.axios.get('http://localhost/users/lastviewed');
       const viewedRecipes = response.data
-      for (let id of viewedRecipes){
-        if (id === recipeId){
+      for (let recipe of viewedRecipes){
+        if (recipe.recipeId === recipeId){
           return true;
         }
       }
       return false;
     },
-    getFavoriteState(recipe) {
-      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      return favorites.some(r => r.id === recipe.id);
+    async getFavoriteState(recipe) {
+      try {
+        console.log("Load favorite to RecipePreViewPage");
+        this.axios.defaults.withCredentials = true;
+        const response = await this.axios.get(`http://localhost/users/favorites`);
+        console.log(response);
+        const favorites = response.data || [];
+        console.log("Fav: " + favorites.some(r => r.id === recipe.id));
+        return favorites.some(r => r.id === recipe.id);
+      } catch (error) {
+        console.log("Error fetching favorite state:", error.response ? error.response.status : error.message);
+        return false;
+      }
     },
     async loadFavorites() {
     try {
-      console.log("Try")
       this.axios.defaults.withCredentials = true;
       const response = await this.axios.get(`http://localhost/users/favorites`);
       console.log(response)
@@ -137,17 +152,25 @@ export default {
     }
   }
   },
-  created() {
+  async created() {
     if (this.$root.store.username){
       this.loadFavorites;
-      this.isFavorite = this.getFavoriteState(this.recipe);
-      this.isViewed = this.checkIfViewed(this.recipe.id);
+      this.isFavorite = await this.getFavoriteState(this.recipe);
+      this.isViewed = await this.checkIfViewed(this.recipe.id);
     }
   },
-  updated() {
-    this.isFavorite = this.getFavoriteState(this.recipe);
-    this.isViewed = this.checkIfViewed(this.recipe.id);
-  },
+  watch: {
+    isFavorite(newVal) {
+      console.log(`Favorite status changed to: ${newVal}`);
+    },
+    isViewed(newVal) {
+      console.log(`Viewed status changed to: ${newVal}`);
+    },
+  }
+  // updated() {
+  //   this.isFavorite = this.getFavoriteState(this.recipe);
+  //   this.isViewed = this.checkIfViewed(this.recipe.id);
+  // },
   
 };
 </script>

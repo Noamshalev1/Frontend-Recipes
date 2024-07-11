@@ -17,16 +17,21 @@
             </div>
             <div class="btn-group-toggle">
             <label class="btn btn-secondary active" style="background-color: white;">
-              <input v-if="this.$root.store.username"
-                type="checkbox"
-                v-model="isFavorite"
-                @change="toggleFavorite"
-              >
-              <img
-                :src="favoriteImage"
-                alt="Favorite"
-                class="favorite-icon"
-              >
+              <!-- Checkbox to track favorite state -->
+              <input
+                    v-if="this.$root.store.username"
+                    type="checkbox"
+                    v-model="isFavorite"
+                    @change="toggleFavorite"
+                    style="display: none;"
+                  />
+                  <!-- Favorite icon that toggles the checkbox and favorite status -->
+                  <img
+                    :src="favoriteImage"
+                    alt="Favorite"
+                    class="favorite-icon"
+                    @click="toggleFavorite"
+                  />
             </label>
         </div>
               <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
@@ -82,7 +87,7 @@ export default {
     try {
       const recipeId = this.$route.params.recipeId;
       let response;
-      
+      console.log(recipeId)
       // Fetch the recipe data from the API
       try {
         response = await axios.get(`http://localhost/recipes/${recipeId}`);
@@ -124,7 +129,8 @@ export default {
       };
 
       //this.saveToLastViewed();
-      this.isFavorite= this.getFavoriteState(this.recipe);
+      this.isFavorite = await this.getFavoriteState(this.recipe);
+      console.log(this.recipe)
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -146,12 +152,13 @@ export default {
     async toggleFavorite() {
       this.isFavorite = !this.isFavorite;
       try {
-        if (!this.isFavorite) {
+        if (this.isFavorite) {
           this.axios.defaults.withCredentials = true;
-          await this.axios.post('http://localhost/users/favorites', { recipeId: this.recipe.id }, {username: this.$root.store.username});
+          await this.axios.post('http://localhost/users/favorites', { recipeId: this.recipe.id });
         } else {
+          console.log(this.recipe.id);
           this.axios.defaults.withCredentials = true;
-          await this.axios.delete('http://localhost/users/favorites', { data: { recipeId: this.recipe.id } });
+          await this.axios.delete(`http://localhost/users/favorites/${this.recipe.id}`);
         }
       } catch (error) {
         console.error("Error updating favorite status:", error.response ? error.response.status : error.message);
@@ -164,10 +171,12 @@ export default {
         console.log("Load favorite to RecipeViewPage");
         this.axios.defaults.withCredentials = true;
         const response = await this.axios.get(`http://localhost/users/favorites`);
-        const favorites = response.data;
+        console.log(response);
+        const favorites = response.data || [];
+        console.log("Fav: " + favorites.some(r => r.id === recipe.id));
         return favorites.some(r => r.id === recipe.id);
       } catch (error) {
-        console.error("Error fetching favorite state:", error.response ? error.response.status : error.message);
+        console.log("Error fetching favorite state:", error.response ? error.response.status : error.message);
         return false;
       }
     },
@@ -194,9 +203,13 @@ export default {
       }));
     }
   },
-  updated() {
-    this.isFavorite = this.getFavoriteState(this.recipe);
+  watch: {
+  isFavorite(newVal) {
+    console.log(`Favorite status changed to: ${newVal}`);
   }
+}
+
+  
 };
 </script>
 

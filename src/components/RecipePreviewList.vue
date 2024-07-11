@@ -90,10 +90,9 @@ export default {
         const viewedRecipes = response.data || [];
         // Ensure we have at least 3 viewed recipe
         console.log("Testtttt " + JSON.stringify(viewedRecipes))
-        if (viewedRecipes.length !== 0) {
+        if (viewedRecipes.length >= 3) {
           const recipePromises = viewedRecipes
-            .slice(-3) // Get the last three viewed recipes
-            .reverse() // Reverse to maintain order (latest viewed first)
+            .slice(0,3) // Get the last three viewed recipes
             .map(recipe  => this.getrecipe(recipe.recipeId)); // Fetch each recipe
             console.log("Viewed")
           // Wait for all recipe promises to resolve
