@@ -58,12 +58,20 @@ export default {
     this.showRecipeModal = !this.showRecipeModal;
     console.log('Toggle modal to:', this.showRecipeModal);
   },
-    Logout() {
-      this.$root.store.logout();
-      this.$root.toast("Logout", "User logged out successfully", "success");
-      this.$router.push("/").catch(() => {
-        this.$forceUpdate();
-      });
+    async Logout() {
+      this.axios.defaults.withCredentials = true;
+      try {
+        const response = await this.axios.post('http://localhost/Logout');
+        console.log(response);
+        this.$root.store.logout();
+        this.$root.toast("Logout", "User logged out successfully", "success");
+        this.$router.push("/").catch(() => {
+          this.$forceUpdate();
+        });
+      } catch (error) {
+        console.error('Error logging out:', error);
+        this.$root.toast("Logout Failed", "Failed to log out user", "error");
+      }
     }
   }
 };
