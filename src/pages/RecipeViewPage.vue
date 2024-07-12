@@ -60,11 +60,6 @@
               <b-icon icon="play-circle"></b-icon> Prepare
             </b-button>
           </div>
-           <div class="text-center mt-3">
-            <b-button variant="success" size="sm" @click="addToGuestPlan">
-              <b-icon icon="plus-circle"></b-icon> Add to Guest Plan
-            </b-button>
-          </div>
         </div>
       </div>
     </div>
@@ -179,10 +174,6 @@ export default {
         console.log("Error fetching favorite state:", error.response ? error.response.status : error.message);
         return false;
       }
-    },
-    addToGuestPlan() {
-      this.guestPlan.push(this.recipe);
-      this.updateIngredientsForGuests();
     },
     updateIngredientsForGuests() {
       this.recipe.extendedIngredients = this.recipe.extendedIngredients.map(ingredient => {
