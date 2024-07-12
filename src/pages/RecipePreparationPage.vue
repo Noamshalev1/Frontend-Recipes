@@ -68,32 +68,54 @@
 
         // family recipe
         if (collection === 'family') {
-          localRecipes = familyrecipes || "[]";
-          localRecipe = localRecipes.find(r => r.id === recipeId);
-          data = localRecipe;
+          this.axios.defaults.withCredentials = true;
+          try{
+            const response = await this.axios.get(`http://localhost/users/familyrecipes`);
+            console.log(response.data);
+            data = response.data || [];
+            data = data.find(r => r.id === recipeId);
+
+          }catch(error){
+            console.log("error")
+          }
+          console.log("Prepa: "+ data.preparation);
+          
           this.recipe = {
           id: data.id,
           title: data.title,
           image: this.getImageUrl(data.image[0]),
           ingredients: data.ingredients,
-          preparation: data.preparation,
+          instructions: [data.preparation],
         };
         this.multipliedIngredients = this.recipe.ingredients;
 
         // myrecipes recipe
         } else if (collection === 'myrecipes') {
-          localRecipes = JSON.parse(localStorage.getItem('myRecipes') || '[]');
-          localRecipe = localRecipes.find(r => r.id === recipeId);
-          data = localRecipe;
+          this.axios.defaults.withCredentials = true;
+          try{
+            const response = await this.axios.get(`http://localhost/users/myrecipes`);
+            console.log(response.data);
+            this.recipes = response.data || [];
+          }catch(error){
+            console.log("error")
+          }
+          this.recipes.forEach(recipe => {
+            if (!recipe.image) {
+              recipe.image = this.defaultImage;
+            }
+          });
 
+          console.log("ID: " + recipeId);
+          data = this.recipes.find(r => r.id === recipeId);
           let ingredients = [];
 
       // Process each ingredient in the array
+        console.log("Recipe: " + data);
         data.ingredients.forEach(ingredient => {
           ingredients.push({
             name: ingredient.name,
-            amount: ingredient.amount.metric.value,
-            unit: ingredient.amount.metric.unit,
+            amount: ingredient.amount,
+            unit: ingredient.unit,
           });
 
         });
@@ -126,23 +148,24 @@
           data = response.data;
 
           this.recipe = {
-          id: data.id,
-          title: data.title,
-          image: data.image,
-          ingredients: data.extendedIngredients.map(ingredient => ({
-            id: ingredient.id,
-            name: ingredient.name,
-            amount: ingredient.measures.metric.amount,
-            unit: ingredient.measures.metric.unitShort
-          })),
-          instructions: data.analyzedInstructions[0]?.steps.map(step => step.step) || []
-        };
-        this.multipliedIngredients = [...this.recipe.ingredients];
-        this.loadProgress();
-        if (this.recipe.instructions) {
-          this.max_len = this.recipe.instructions.length;
+            id: data.id,
+            title: data.title,
+            image: data.image,
+            ingredients: data.extendedIngredients.map(ingredient => ({
+              id: ingredient.id,
+              name: ingredient.name,
+              amount: ingredient.measures.metric.amount,
+              unit: ingredient.measures.metric.unitShort
+            })),
+            instructions: data.analyzedInstructions[0]?.steps.map(step => step.step) || []
+          };
+          this.multipliedIngredients = [...this.recipe.ingredients];
+          //this.loadProgress();
+          if (this.recipe.instructions) {
+            this.max_len = this.recipe.instructions.length;
+          }
         }
-        } 
+        this.loadProgress(); 
       },
       multiplyIngredients() {
         this.multipliedIngredients = this.multipliedIngredients.map(ingredient => ({
