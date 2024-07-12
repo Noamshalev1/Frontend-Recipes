@@ -58,6 +58,7 @@ export default {
   methods: {
     getImageUrl(image) {
       try {
+        console.log("IMG: "+ image);
         return require(`@/assets/${image}`);
       } catch (e) {
         console.error(`Image not found: ${image}`);

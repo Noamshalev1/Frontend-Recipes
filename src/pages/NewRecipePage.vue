@@ -66,16 +66,8 @@ export default {
       // Transform ingredients to match Spoonacular's format
       const ingredients = this.recipe.ingredients.map(ingredient => ({
         name: ingredient.name,
-        amount: {
-          metric: {
-            value: ingredient.amount,
-            unit: ingredient.unit
-          },
-          us: {
-            value: ingredient.amount, // Assuming the same for simplicity
-            unit: ingredient.unit
-          }
-        }
+        amount: ingredient.amount, 
+        unit: ingredient.unit
       }));
       
       // Construct the recipe object in Spoonacular format
@@ -100,11 +92,10 @@ export default {
           }
         ]
       };
-      console.log(newRecipe);
 
       try{
         this.axios.defaults.withCredentials = true;
-        await this.axios.post('http://localhost/users/myrecipes', {recipe: this.newRecipe});
+        await this.axios.post('http://localhost/users/myrecipes', {recipe: newRecipe});
       }catch (error){
         console.error("Error creating my recipe:", error.response ? error.response.status : error.message);
       }     

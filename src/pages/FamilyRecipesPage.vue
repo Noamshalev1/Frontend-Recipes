@@ -2,14 +2,13 @@
   <div class="container">
     <h1 class="title">Family Recipes Page</h1>
     <div class="recipes">
-      <FamilyRecipes v-for="recipe in familyrecipes" :key="recipe.id" :recipe="recipe" />
+      <FamilyRecipes v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
     </div>
   </div>
 </template>
 
 <script>
 import FamilyRecipes from '../components/FamilyRecipes.vue';
-import familyrecipes from '../assets/mocks/familyrecipes.json';
 
 export default {
   name: 'FamilyRecipesPage',
@@ -20,6 +19,9 @@ export default {
     return {
       recipes: []
     };
+  },
+  async mounted() {
+    await this.getRecipes(); // Call getRecipes when the page is loaded
   },
   methods:{
     async getRecipes(){

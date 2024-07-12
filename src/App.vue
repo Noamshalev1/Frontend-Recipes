@@ -5,7 +5,7 @@
       <router-link :to="{ name: 'search' }">Search</router-link>|
       <router-link :to="{ name: 'about' }">About</router-link>|
       <!-- {{ !$root.store.username }} -->
-      <span v-if="!$root.store.username">
+      <span v-if="!this.$root.store.username">
         <h1 class="user-greeting">Hello, Guest</h1>|
         <router-link class="highlight-button" :to="{ name: 'register' }">Register</router-link>|
         <router-link class="highlight-button" :to="{ name: 'login' }">Login</router-link>
