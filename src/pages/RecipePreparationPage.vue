@@ -70,7 +70,7 @@
         if (collection === 'family') {
           this.axios.defaults.withCredentials = true;
           try{
-            const response = await this.axios.get(`http://localhost/users/familyrecipes`);
+            const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/familyrecipes`);
             console.log(response.data);
             data = response.data || [];
             data = data.find(r => r.id === recipeId);
@@ -93,7 +93,7 @@
         } else if (collection === 'myrecipes') {
           this.axios.defaults.withCredentials = true;
           try{
-            const response = await this.axios.get(`http://localhost/users/myrecipes`);
+            const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/myrecipes`);
             console.log(response.data);
             this.recipes = response.data || [];
           }catch(error){
@@ -139,7 +139,7 @@
         else{
           let response;
           try {
-            response = await axios.get(`http://localhost/recipes/${recipeId}`);
+            response = await axios.get(`https://recipes-heaven.cs.bgu.ac.il/recipes/${recipeId}`);
           } catch (error) {
             console.error("Error fetching recipe from API:", error.response ? error.response.status : error.message);
             this.$router.replace("/NotFound");
@@ -182,7 +182,7 @@
         // localStorage.setItem(`recipeProgress-${this.recipe.id}`, JSON.stringify(this.stepCompleted));
         try{
           this.axios.defaults.withCredentials = true;
-          await this.axios.post(`http://localhost/users/${this.recipe.id}/progress`, {progress: JSON.stringify(this.stepCompleted)} );
+          await this.axios.post(`https://recipes-heaven.cs.bgu.ac.il/users/${this.recipe.id}/progress`, {progress: JSON.stringify(this.stepCompleted)} );
           console.log('Recipe progress saved successfully.');
         } catch (error) {
           onsole.error('Error saving recipe progress:', error);
@@ -196,7 +196,7 @@
         // const savedProgress = localStorage.getItem(`recipeProgress-${this.recipe.id}`);
         try{
           this.axios.defaults.withCredentials = true;
-          const response = await this.axios.get(`http://localhost/users/${this.recipe.id}/progress`);
+          const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/${this.recipe.id}/progress`);
           const savedProgress = response.data[0].progress || null;
           console.log(response.data[0].progress)
           if (savedProgress) {

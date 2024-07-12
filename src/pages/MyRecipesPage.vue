@@ -43,7 +43,7 @@ export default {
     async loadRecipes() {
       this.axios.defaults.withCredentials = true;
       try{
-        const response = await this.axios.get(`http://localhost/users/myrecipes`);
+        const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/myrecipes`);
         console.log(response.data);
         this.recipes = response.data || [];
 

@@ -61,7 +61,7 @@ export default {
     async Logout() {
       this.axios.defaults.withCredentials = true;
       try {
-        const response = await this.axios.post('http://localhost/Logout');
+        const response = await this.axios.post('https://recipes-heaven.cs.bgu.ac.il/Logout');
         console.log(response);
         this.$root.store.logout();
         this.$root.toast("Logout", "User logged out successfully", "success");

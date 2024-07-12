@@ -136,7 +136,7 @@ export default {
    * Perform a search with the current search query and filters.
    */
     async performSearch() {
-      const baseURL = 'http://localhost/recipes/search';//change to server url at the end !!<-----------------
+      const baseURL = 'https://recipes-heaven.cs.bgu.ac.il/recipes/search';//change to server url at the end !!<-----------------
       console.log('Searching for:', this.searchQuery);
       let params = {
         query: this.searchQuery || '', // Allow search with filters even if query is empty
@@ -169,7 +169,7 @@ export default {
     async loadLastSearch() {
       try {
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get('http://localhost/users/search');
+        const response = await this.axios.get('https://recipes-heaven.cs.bgu.ac.il/users/search');
         const lastSearch = response.data[0].searchQuery;
         console.log("LS: "+lastSearch);
       if (lastSearch) {

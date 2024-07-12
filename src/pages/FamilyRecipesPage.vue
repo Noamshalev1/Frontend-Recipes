@@ -26,7 +26,7 @@ export default {
   methods:{
     async getRecipes(){
       this.axios.defaults.withCredentials = true;
-      const response = await this.axios.get(`http://localhost/users/familyrecipes`);
+      const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/familyrecipes`);
       this.recipes = response.data;
     }
   }

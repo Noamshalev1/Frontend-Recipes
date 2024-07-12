@@ -270,7 +270,7 @@ export default {
 
         const response = await this.axios.post(
           // "https://test-for-3-2.herokuapp.com/user/Register",
-          "http://localhost/Register",
+          "https://recipes-heaven.cs.bgu.ac.il/Register",
 
           {
             username: this.form.username,

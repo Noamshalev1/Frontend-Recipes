@@ -90,7 +90,7 @@ export default {
       console.log(recipeId)
       // Fetch the recipe data from the API
       try {
-        response = await axios.get(`http://localhost/recipes/${recipeId}`);
+        response = await axios.get(`https://recipes-heaven.cs.bgu.ac.il/recipes/${recipeId}`);
       } catch (error) {
         console.error("Error fetching recipe from API:", error.response ? error.response.status : error.message);
         this.$router.replace("/NotFound");
@@ -154,11 +154,11 @@ export default {
       try {
         if (this.isFavorite) {
           this.axios.defaults.withCredentials = true;
-          await this.axios.post('http://localhost/users/favorites', { recipeId: this.recipe.id });
+          await this.axios.post('https://recipes-heaven.cs.bgu.ac.il/users/favorites', { recipeId: this.recipe.id });
         } else {
           console.log(this.recipe.id);
           this.axios.defaults.withCredentials = true;
-          await this.axios.delete(`http://localhost/users/favorites/${this.recipe.id}`);
+          await this.axios.delete(`https://recipes-heaven.cs.bgu.ac.il/users/favorites/${this.recipe.id}`);
         }
       } catch (error) {
         console.error("Error updating favorite status:", error.response ? error.response.status : error.message);
@@ -170,7 +170,7 @@ export default {
       try {
         console.log("Load favorite to RecipeViewPage");
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get(`http://localhost/users/favorites`);
+        const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/favorites`);
         console.log(response);
         const favorites = response.data || [];
         console.log("Fav: " + favorites.some(r => r.id === recipe.id));

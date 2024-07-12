@@ -86,7 +86,7 @@ export default {
         // remote
         try {
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get('http://localhost/users/lastviewed');
+        const response = await this.axios.get('https://recipes-heaven.cs.bgu.ac.il/users/lastviewed');
         const viewedRecipes = response.data || [];
         // Ensure we have at least 3 viewed recipe
         console.log("Testtttt " + JSON.stringify(viewedRecipes))
@@ -144,7 +144,7 @@ export default {
     
     const recipeId = id;
     try {
-      const response = await axios.get(`http://localhost/recipes/${recipeId}`);
+      const response = await axios.get(`https://recipes-heaven.cs.bgu.ac.il/recipes/${recipeId}`);
       console.log('Recipe API response:', response);
 
       const {

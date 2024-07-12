@@ -95,7 +95,7 @@ export default {
 
       try{
         this.axios.defaults.withCredentials = true;
-        await this.axios.post('http://localhost/users/myrecipes', {recipe: newRecipe});
+        await this.axios.post('https://recipes-heaven.cs.bgu.ac.il/users/myrecipes', {recipe: newRecipe});
       }catch (error){
         console.error("Error creating my recipe:", error.response ? error.response.status : error.message);
       }     

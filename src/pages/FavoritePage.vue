@@ -37,7 +37,7 @@ export default {
       try {
         console.log("Load from favorite page")
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get(`http://localhost/users/favorites`);
+        const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/favorites`);
         this.favorites = response.data;
       } catch (error) {
         console.error("Error loading favorite recipes:", error.response ? error.response.status : error.message);

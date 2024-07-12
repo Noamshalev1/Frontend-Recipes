@@ -78,11 +78,11 @@ export default {
       try {
         if (this.isFavorite) {
           this.axios.defaults.withCredentials = true;
-          await this.axios.post('http://localhost/users/favorites', { recipeId: this.recipe.id});
+          await this.axios.post('https://recipes-heaven.cs.bgu.ac.il/users/favorites', { recipeId: this.recipe.id});
           //this.addToFavorites();
         } else {
           this.axios.defaults.withCredentials = true;
-          await this.axios.delete(`http://localhost/recipes/${recipeId}`);
+          await this.axios.delete(`https://recipes-heaven.cs.bgu.ac.il/recipes/${recipeId}`);
           //this.removeFromFavorites();
         }
       } catch (error) {
@@ -109,7 +109,7 @@ export default {
     async markAsViewed() {
       try {
         this.axios.defaults.withCredentials = true;
-        await this.axios.post('http://localhost/users/lastviewed', {recipeId: this.recipe.id});
+        await this.axios.post('https://recipes-heaven.cs.bgu.ac.il/users/lastviewed', {recipeId: this.recipe.id});
         this.isViewed = true;
       }catch(error){
         console.error("Error updating lastviewed status:", error.response ? error.response.status : error.message);
@@ -117,7 +117,7 @@ export default {
     },
     async checkIfViewed(recipeId) {
       this.axios.defaults.withCredentials = true;
-      const response = await this.axios.get('http://localhost/users/lastviewed');
+      const response = await this.axios.get('https://recipes-heaven.cs.bgu.ac.il/users/lastviewed');
       const viewedRecipes = response.data
       for (let recipe of viewedRecipes){
         if (recipe.recipeId === recipeId){
@@ -130,7 +130,7 @@ export default {
       try {
         console.log("Load favorite to RecipePreViewPage");
         this.axios.defaults.withCredentials = true;
-        const response = await this.axios.get(`http://localhost/users/favorites`);
+        const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/favorites`);
         console.log(response);
         const favorites = response.data || [];
         console.log("Fav: " + favorites.some(r => r.id === recipe.id));
@@ -143,7 +143,7 @@ export default {
     async loadFavorites() {
     try {
       this.axios.defaults.withCredentials = true;
-      const response = await this.axios.get(`http://localhost/users/favorites`);
+      const response = await this.axios.get(`https://recipes-heaven.cs.bgu.ac.il/users/favorites`);
       console.log(response)
       const favorites = response.data;
       localStorage.setItem('favorites', JSON.stringify(favorites));
