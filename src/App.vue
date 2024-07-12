@@ -28,7 +28,6 @@
 
 <script>
 import NewRecipePage from './pages/NewRecipePage.vue';
-import users from "./assets/mocks/users.json";
 
 export default {
   name: "App",
@@ -37,10 +36,11 @@ export default {
   },
   computed: {
     username() {
-      return this.$root.store.username;
+      console.log("username "+this.$root.store.username);
+      return this.$root.store.username || null;
     },
     firstName() {
-      return this.$root.store.firstName || users.users[this.username];
+      return this.$root.store.firstName;
     }
   },
   data() {
